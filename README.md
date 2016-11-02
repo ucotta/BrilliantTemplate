@@ -1,10 +1,12 @@
 # BrilliantTemplate
 
-Brilliant Template is template processor for Swift to process HTML5.
+BrilliantTemplate is template processor for Swift to process HTML5.
 
-Created with Designers in mind, BrilliantTemplate avoid dirty code by using tags and attibutes for variables and control structures.
+Was created with designers in mid, BrilliantTemplate avoid dirty code by using tags and attibutes for variables and control structures.
 
-Using is easy, prepare a dictionary with the data and call to BrilliantTemplate to merge with your template.
+Merge the data with the template is easy, just prepare a dictionary with all values and then, use BrilliantTemplate with your html5 template.
+
+> This readme wants to show what BrilliantTemplate can do, is not a reference manual, you can get more information and usage guide in the wiki of this project in github: https://github.com/ucotta/BrilliantTemplate
 
 Here is a dictionary example:
 
@@ -28,14 +30,14 @@ let data: [String: Any?] = [
 ]
 ```
 
-Here the template for example.html
+The template for example.html
 ``` html
 <!DOCTYPE HTML>
 <html aid="lang:lang">
 <head>
 	<title tid="title:upper:cap"></title>
-	<meta name="keywords" aid="content:keywords:lower"></meta>
-	<meta name="description" aid="content:description"></meta>
+	<meta name="keywords" aid="content:keywords:lower">
+	<meta name="description" aid="content:description">
 
 	<script jsid="javascriptVars">
 		// this javascript will be replaced by the javascriptVars data
@@ -66,7 +68,6 @@ And this is menu.html
 ``` html
 	<div class="coco">
 		<!-- comment in menu -->
-
 		<div class="menu">
 			this is the menu!!
 		</div>
