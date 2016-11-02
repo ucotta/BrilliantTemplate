@@ -126,5 +126,6 @@ And this will be the result for this code:
 
 The final HTML was retabuled for easy reading.
 
-
+# More information in the Wiki of this project
+https://github.com/ucotta/BrilliantTemplate/wiki
 
