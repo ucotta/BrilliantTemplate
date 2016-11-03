@@ -9,7 +9,7 @@
 import Foundation
 import Kanna
 
-class BrilliantTemplate {
+public class BrilliantTemplate {
 	let template: String
 	let data: [String:Any?]
 	let path: String
@@ -135,7 +135,7 @@ class BrilliantTemplate {
 			} else {
 				var parts = tid.components(separatedBy: ":")
 
-				if let variable = data[parts[0]]! {
+				if let variable = data[parts[0]] {
 
 					switch variable {
 					case let v as String:
@@ -167,9 +167,19 @@ class BrilliantTemplate {
 
 	func processTids(_ doc:Kanna.XMLElement, data: [String: Any?] ) {
 		_processTids(doc, data: data)
-		for item in doc.xpath("//*[@tid]") {
-			_processTids(item, data: data)
-		}
+		repeat {
+			if let item = doc.xpath("//*[@tid]").first {
+				print(item.toHTML!)
+				_processTids(item, data: data)
+			} else {
+				break
+			}
+		} while true
+
+		//for item in  {
+		//	print(item.toHTML!)
+		//	_processTids(item, data: data)
+		//}
 	}
 
 	func processArray(node: Kanna.XMLElement, values: [[String: Any?]]) {
