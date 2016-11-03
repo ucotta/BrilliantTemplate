@@ -167,7 +167,7 @@ class BrilliantTemplate {
 
 	func processTids(_ doc:Kanna.XMLElement, data: [String: Any?] ) {
 		_processTids(doc, data: data)
-		for var item in doc.xpath("//*[@tid]") {
+		for item in doc.xpath("//*[@tid]") {
 			_processTids(item, data: data)
 		}
 	}
