@@ -209,5 +209,4 @@ class BrilliantTemplate {
 
 }
 
-print(test(template: "example.html", path: "/Users/ukamata/Fuentes/Ubaldo/MasPruebasHTML/resources"))
 
