@@ -12,6 +12,6 @@ let package = Package(
 	name: "BrilliantTemplate",
 	targets: [],
 	dependencies: [
-		.Package(url: "https://github.com/tid-kijyun/Kanna.git", majorVersion: 2)
+		.Package(url: "https://github.com/ucotta/Kanna.git", majorVersion: 2)
 	]
 )

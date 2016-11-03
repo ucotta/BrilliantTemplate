@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Kanna
 
 class BrilliantTemplate {
 	let template: String
@@ -64,100 +65,122 @@ class BrilliantTemplate {
 	}
 
 	func processAids(_ doc:HTMLDocument) {
-		return processAids(doc, data: data)
+		// Send from root, to allow changes in <html> tag 
+		return processAids(doc.xpath("//*")[0], data: data)
 
 	}
-	func processAids(_ doc:SearchableNode, data: [String: Any?] ) {
-		for var item in doc.xpath("//*[@aid]") {
-			if let aid = item["aid"] {
-				var parts: [String] = aid.components(separatedBy: ":")
 
-				if (parts.count < 2) {
-					item["aid"] = "incorrect syntax, aid needs 2 or more parameters"
-				} else {
-					let attribute = parts.remove(at: 0)
+	func _processAid(_ doc: Kanna.XMLElement, data: [String: Any?]) {
+		var item = doc
 
-					if let variable = data[parts[0]] { 
-						var attributeValue: String? = nil
+		if let aid = item["aid"] {
+			var parts: [String] = aid.components(separatedBy: ":")
 
-						switch variable {
-						case let v as String:
-							attributeValue = filterString(value: v, filters: parts)
+			if (parts.count < 2) {
+				item["aid"] = "incorrect syntax, aid needs 2 or more parameters"
+			} else {
+				let attribute = parts.remove(at: 0)
 
-						case let v as NSNumber:
-							attributeValue = filterNumber(value: v, filters: parts)
+				if let variable = data[parts[0]] {
+					var attributeValue: String? = nil
 
-						default:
-							item["aid"] = "\(variable) not supported"
-							print("\(parts[0]) not supported")
-						}
+					switch variable {
+					case let v as String:
+						attributeValue = filterString(value: v, filters: parts)
 
-						if attributeValue != nil {
-							item["aid"] = nil
-							item[attribute] = attributeValue
-						}
+					case let v as NSNumber:
+						attributeValue = filterNumber(value: v, filters: parts)
 
-					} else {
-						item["aid"] = nil
-						item[attribute] = ""
+					default:
+						item["aid"] = "\(variable) not supported"
+						print("\(parts[0]) not supported")
 					}
-				}
 
+					if attributeValue != nil {
+						item["aid"] = nil
+						item[attribute] = attributeValue
+					}
+
+				} else {
+					item["aid"] = nil
+					item[attribute] = ""
+				}
 			}
+			
+		}
+	}
+
+	func processAids(_ doc:Kanna.XMLElement, data: [String: Any?] ) {
+		_processAid(doc, data: data)
+		for item in doc.xpath("./descendant::*[@aid]") {
+			_processAid(item, data: data)
+
 		}
 	}
 
 
 
 	func processTids(_ doc:HTMLDocument) {
-		return processTids(doc, data: data)
+		// Send from root, to allow changes in <html> tag
+		return processTids(doc.xpath("//*")[0], data: data)
 	}
 
-	func processTids(_ doc:SearchableNode, data: [String: Any?] ) {
-		for var item in doc.xpath("//*[@tid]") {
-			if let tid = item["tid"] {
 
-				if (tid.isEmpty) {
-					item.content = "Empty tid cannot be used!"
-				} else {
-					var parts = tid.components(separatedBy: ":")
+	func _processTids(_ doc:Kanna.XMLElement, data: [String: Any?] ) {
+		var item = doc
+		if let tid = item["tid"] {
 
-					if let variable = data[parts[0]]! {
+			if (tid.isEmpty) {
+				item.content = "Empty tid cannot be used!"
+			} else {
+				var parts = tid.components(separatedBy: ":")
 
-						switch variable {
-						case let v as String:
-							item.content = filterString(value: v, filters: parts)
+				if let variable = data[parts[0]]! {
 
-						case let v as NSNumber:
-							item.content = filterNumber(value: v, filters: parts)
+					switch variable {
+					case let v as String:
+						item.content = filterString(value: v, filters: parts)
 
-
-						case let v as [[String: Any?]]:
-							// Array of dictionaries
-							item["tid"] = nil
-							processArray(node: item as! libxmlHTMLNode, values: v)
+					case let v as NSNumber:
+						item.content = filterNumber(value: v, filters: parts)
 
 
-						default:
-							print("\(parts[0]) not supported")
-						}
+					case let v as [[String: Any?]]:
+						// Array of dictionaries
+						item["tid"] = nil
+						processArray(node: item, values: v)
 
-					} else {
-						item.content = "tid: '\(tid)' not found!"
+
+					default:
+						print("\(parts[0]) not supported")
 					}
+
+				} else {
+					item.content = "tid: '\(tid)' not found!"
 				}
-				item["tid"] = nil
 			}
+			item["tid"] = nil
+		}
+
+
+	}
+
+	func processTids(_ doc:Kanna.XMLElement, data: [String: Any?] ) {
+		_processTids(doc, data: data)
+		for var item in doc.xpath("//*[@tid]") {
+			_processTids(item, data: data)
 		}
 	}
 
-	func processArray(node: libxmlHTMLNode, values: [[String: Any?]]) {
+	func processArray(node: Kanna.XMLElement, values: [[String: Any?]]) {
 		for value in values {
 			if let newNode = node.cloneNode() {
-				processTids(newNode, data: value)
-				processAids(newNode, data: value)
-				processTids(newNode, data: data)
-				processAids(newNode, data: data)
+				var newData = data
+				for (key,val) in value {
+					newData.updateValue(val, forKey:key)
+				}
+				processTids(newNode, data: newData)
+				processAids(newNode, data: newData)
 			}
 
 		}
@@ -185,4 +208,6 @@ class BrilliantTemplate {
 
 
 }
+
+print(test(template: "example.html", path: "/Users/ukamata/Fuentes/Ubaldo/MasPruebasHTML/resources"))
 
