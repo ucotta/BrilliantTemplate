@@ -130,3 +130,48 @@ The final HTML was retabuled for easy reading.
 # More information in the Wiki of this project
 https://github.com/ucotta/BrilliantTemplate/wiki
 
+
+# Requeriments and setup to use this library
+
+First of all, you have to know this library uses [Kanna by Tin Kijyun](https://github.com/tid-kijyun/Kanna) to parse the HTML, I made some changes to duplicate HTML nodes for iteration.
+
+Kanna uses libxml2 to render the html, because of this you have to configure Xcode to use this library or, if you want to use on Linux, configure swift build.
+
+## Setup Xcode
+
+Install libxml2
+```bash
+brew install libxml2
+```
+
+*Open project settings*:
+* In *Other Linker flags* in *Kanna* add -lxml2
+* In *Header Search Paths* in *Kanna and your project* add $(SDKROOT)/usr/include/libxml2
+* In *Objective-C Bridging Header* in *Kanna* add $PROJECT_DIR/Sources/Bridging-Header.h
+* Check in your directory Sources contains a file named, create it is it necessary.
+* Add the next content to your new Bridging-Header.h
+
+```swift
+#ifndef Bridging_Header_h
+#define Bridging_Header_h
+
+#import <libxml/HTMLtree.h>
+#import <libxml/xpath.h>
+#import <libxml/xpathInternals.h>
+
+#endif /* Bridging_Header_h */
+
+```
+
+## Setup Linux Ubuntu 16.04
+
+Install libxml2 developer header 
+```bash
+apt-get install libxml2-dev
+```
+
+When compile your project has to use this instruction:
+```bash
+swift build -Xcc -I/usr/include/libxml2 -Xlinker -lxml2
+
+```
