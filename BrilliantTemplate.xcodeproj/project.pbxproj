@@ -6,6 +6,12 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		75F4095B1DD0AD61006E98B0 /* filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F409561DD0AD61006E98B0 /* filters.swift */; };
+		75F4095C1DD0AD61006E98B0 /* template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F409571DD0AD61006E98B0 /* template.swift */; };
+		75F4095E1DD0AD61006E98B0 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 75F4095A1DD0AD61006E98B0 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		755798DF1DD0AAD000359A01 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -20,6 +26,11 @@
 
 /* Begin PBXFileReference section */
 		755798E11DD0AAD000359A01 /* BrilliantTemplate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BrilliantTemplate; sourceTree = BUILT_PRODUCTS_DIR; };
+		75F409561DD0AD61006E98B0 /* filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = filters.swift; sourceTree = "<group>"; };
+		75F409571DD0AD61006E98B0 /* template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = template.swift; sourceTree = "<group>"; };
+		75F409581DD0AD61006E98B0 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		75F409591DD0AD61006E98B0 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		75F4095A1DD0AD61006E98B0 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,7 +47,10 @@
 		755798D81DD0AAD000359A01 = {
 			isa = PBXGroup;
 			children = (
-				755798E31DD0AAD000359A01 /* BrilliantTemplate */,
+				75F409531DD0AD61006E98B0 /* Sources */,
+				75F409581DD0AD61006E98B0 /* LICENSE */,
+				75F409591DD0AD61006E98B0 /* Package.swift */,
+				75F4095A1DD0AD61006E98B0 /* README.md */,
 				755798E21DD0AAD000359A01 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,9 +63,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		755798E31DD0AAD000359A01 /* BrilliantTemplate */ = {
+		75F409531DD0AD61006E98B0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				75F409551DD0AD61006E98B0 /* BrilliantTemplate */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		75F409551DD0AD61006E98B0 /* BrilliantTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				75F409561DD0AD61006E98B0 /* filters.swift */,
+				75F409571DD0AD61006E98B0 /* template.swift */,
 			);
 			path = BrilliantTemplate;
 			sourceTree = "<group>";
@@ -89,6 +113,7 @@
 					755798E01DD0AAD000359A01 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = AS528T5KF4;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -115,6 +140,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75F4095B1DD0AD61006E98B0 /* filters.swift in Sources */,
+				75F4095E1DD0AD61006E98B0 /* README.md in Sources */,
+				75F4095C1DD0AD61006E98B0 /* template.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,8 +240,11 @@
 		755798E91DD0AAD000359A01 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = AS528T5KF4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -221,7 +252,9 @@
 		755798EA1DD0AAD000359A01 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = AS528T5KF4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -246,6 +279,7 @@
 				755798EA1DD0AAD000359A01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
