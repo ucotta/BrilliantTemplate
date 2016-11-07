@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Kanna
+import BrilliantHTML5Parser
 
 public class BrilliantTemplate {
 	let template: String
