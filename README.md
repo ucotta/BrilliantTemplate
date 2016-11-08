@@ -123,9 +123,61 @@ And this will be the result for this code:
 	</div>
 </body>
 </html>
+
 ```
 
 The final HTML was retabuled for easy reading.
+
+# Installation
+
+Create this files in a new directory:
+
+**Package.swift**
+```swift
+import PackageDescription
+
+let package = Package(
+	name: "MyTest",
+	targets: [],
+	dependencies: [
+		.Package(url: "https://github.com/ucotta/BrilliantTemplate.git", majorVersion: 0)
+	],
+	exclude: ["BrilliantTemplateTests"]
+)
+```
+
+**Sources/MyTest/main.swift**
+```swift
+import BrilliantTemplate
+
+// This data will be merged
+var data: [String: Any] = [
+	"title": "This is the title",
+	"welcome": "this is your first example!!",
+	"more": "and you can do a lot of stuff",
+	"buttonColor": "btn-blue btn-sm btn"
+]
+
+// Load a raw HTML 
+let URLINDEX = "https://raw.githubusercontent.com/ucotta/BrilliantHTML5Parser/master/examples/index.html"
+
+if let url = URL(string: URLINDEX) {
+	let html = try String(contentsOf: url)
+	let bt = BrilliantTemplate(html: html, data: data, path: "/tmp")
+	print(tc.getHTML())
+} else {
+	print("error in URL \(URLINDEX)")
+}
+```
+
+**Create the project, open it**
+
+```bash
+swift package generate-xcodeproj && open MyTest.xcodeproj
+```
+
+Now select the correct scheme and run!.
+
 
 # More information in the Wiki of this project
 https://github.com/ucotta/BrilliantTemplate/wiki

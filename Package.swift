@@ -15,6 +15,6 @@ let package = Package(
 	dependencies: [
 		.Package(url: "https://github.com/ucotta/BrilliantHTML5Parser.git", majorVersion: 0)
 	],
-	exclude: ["BrilliantTemplateTest"]
+	exclude: ["BrilliantTemplateTests"]
 	
 )

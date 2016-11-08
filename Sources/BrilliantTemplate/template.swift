@@ -133,7 +133,7 @@ public class BrilliantTemplate {
 				processTids(node: childNode, data: mergedData)
 				childNode["tid"] = nil
 			}
-			while let childNode: HTMLNode = newNode.getNextNodeWithAtt(att: "aid") {
+			while let childNode: HTMLNode = newNode.getNextAid() {
 				processAid(node: childNode, data: mergedData)
 				childNode["aid"] = nil
 			}
@@ -183,7 +183,7 @@ public class BrilliantTemplate {
 	}
 
 	func processAids(doc: ParserHTML5, data: [String: Any?] ) {
-		while let node:HTMLNode = doc.root.getNextNodeWithAtt(att: "aid") {
+		while let node:HTMLNode = doc.root.getNextAid() {
 			processAid(node: node, data: data)
 		}
 	}
