@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		756D0AF21DD1660200CEFFCF /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 756D0AF11DD1660200CEFFCF /* README.md */; };
 		75FDD6F51DD0C20900C1C733 /* BrilliantTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FDD6F41DD0C20900C1C733 /* BrilliantTemplateTests.swift */; };
 		75FDD6F71DD0C20900C1C733 /* BrilliantTemplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* BrilliantTemplate.framework */; };
 		OBJ_31 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Constants.swift */; };
@@ -55,6 +56,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		756D0AF01DD1660200CEFFCF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		756D0AF11DD1660200CEFFCF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		75FDD6F21DD0C20900C1C733 /* BrilliantTemplateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrilliantTemplateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75FDD6F41DD0C20900C1C733 /* BrilliantTemplateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrilliantTemplateTests.swift; sourceTree = "<group>"; };
 		75FDD6F61DD0C20900C1C733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -160,6 +163,8 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
+				756D0AF01DD1660200CEFFCF /* LICENSE */,
+				756D0AF11DD1660200CEFFCF /* README.md */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_20 /* Tests */,
@@ -323,6 +328,7 @@
 			files = (
 				OBJ_31 /* Constants.swift in Sources */,
 				OBJ_32 /* ParseError.swift in Sources */,
+				756D0AF21DD1660200CEFFCF /* README.md in Sources */,
 				OBJ_33 /* String+HTMLEntities.swift in Sources */,
 				OBJ_34 /* Utilities.swift in Sources */,
 			);
@@ -637,6 +643,7 @@
 				75FDD6FB1DD0C20900C1C733 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 		OBJ_2 /* Build configuration list for PBXProject "BrilliantTemplate" */ = {
 			isa = XCConfigurationList;
