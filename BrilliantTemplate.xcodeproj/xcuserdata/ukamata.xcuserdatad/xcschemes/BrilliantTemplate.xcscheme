@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "755798E01DD0AAD000359A01"
-               BuildableName = "BrilliantTemplate"
+               BlueprintIdentifier = "OBJ_47"
+               BuildableName = "BrilliantTemplate.framework"
                BlueprintName = "BrilliantTemplate"
                ReferencedContainer = "container:BrilliantTemplate.xcodeproj">
             </BuildableReference>
@@ -32,8 +32,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "755798E01DD0AAD000359A01"
-            BuildableName = "BrilliantTemplate"
+            BlueprintIdentifier = "OBJ_47"
+            BuildableName = "BrilliantTemplate.framework"
             BlueprintName = "BrilliantTemplate"
             ReferencedContainer = "container:BrilliantTemplate.xcodeproj">
          </BuildableReference>
@@ -55,8 +55,8 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "755798E01DD0AAD000359A01"
-            BuildableName = "BrilliantTemplate"
+            BlueprintIdentifier = "OBJ_47"
+            BuildableName = "BrilliantTemplate.framework"
             BlueprintName = "BrilliantTemplate"
             ReferencedContainer = "container:BrilliantTemplate.xcodeproj">
          </BuildableReference>
@@ -74,8 +74,8 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "755798E01DD0AAD000359A01"
-            BuildableName = "BrilliantTemplate"
+            BlueprintIdentifier = "OBJ_47"
+            BuildableName = "BrilliantTemplate.framework"
             BlueprintName = "BrilliantTemplate"
             ReferencedContainer = "container:BrilliantTemplate.xcodeproj">
          </BuildableReference>

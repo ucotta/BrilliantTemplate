@@ -9,10 +9,20 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>BrilliantTemplate.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>BrilliantTemplateTest.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
+		</dict>
+		<key>BrilliantTemplateTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -23,6 +33,26 @@
 			<true/>
 		</dict>
 		<key>75F409631DD0B092006E98B0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>75FDD6F11DD0C20900C1C733</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_26</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_36</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_47</key>
 		<dict>
 			<key>primary</key>
 			<true/>
