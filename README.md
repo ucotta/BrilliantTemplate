@@ -148,6 +148,7 @@ let package = Package(
 
 **Sources/MyTest/main.swift**
 ```swift
+import Foundation
 import BrilliantTemplate
 
 // This data will be merged
@@ -163,8 +164,15 @@ let URLINDEX = "https://raw.githubusercontent.com/ucotta/BrilliantHTML5Parser/ma
 
 if let url = URL(string: URLINDEX) {
 	let html = try String(contentsOf: url)
+
 	let bt = BrilliantTemplate(html: html, data: data, path: "/tmp")
-	print(tc.getHTML())
+
+	print("Before --------\n")
+	print(html)
+
+	print("After ---------\n")
+	print(bt.getHTML())
+
 } else {
 	print("error in URL \(URLINDEX)")
 }
