@@ -50,8 +50,8 @@ public class BrilliantTemplate {
                 return "included file not found"
             }
 			return try String(contentsOfFile: finalFile, encoding: String.Encoding.utf8)
-        } catch let error {
-			return "error opening file \(file) \(error.localizedDescription)"
+        } catch { // let error {
+            return "error opening file \(file)" // \(error.localizedDescription)"
 		}
 		return "included file not found"
 	}

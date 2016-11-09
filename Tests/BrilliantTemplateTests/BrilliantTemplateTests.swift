@@ -68,7 +68,7 @@ class BrilliantTemplateTests: XCTestCase {
 	}
     
     func test_include() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n<body>\n<div class=\"menu\"><span>the file was included</span>\n</div>\n</body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n<body>\n<div class=\"menu\"><span>the file was included</span>\n\n</div>\n</body>\n</html>\n"
 
         let template = BrilliantTemplate(file: "test_include.html", data: [:], path: getPathTemplates())
         
@@ -77,7 +77,7 @@ class BrilliantTemplateTests: XCTestCase {
     }
 
     func test_include_error() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">error opening file this_file_doesnt_exist.html The file “this_file_doesnt_exist.html” couldn’t be opened because there is no such file.\n        </div>\n    </body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">error opening file this_file_doesnt_exist.html\n        </div>\n    </body>\n</html>\n"
 
         
         let template = BrilliantTemplate(file: "test_include_error.html", data: [:], path: getPathTemplates())
