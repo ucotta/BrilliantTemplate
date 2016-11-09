@@ -12,20 +12,17 @@ import BrilliantHTML5Parser
 extension String {
     var containsTraversalCharacters: Bool {
         get {
-            // https://www.owasp.org/index.php/Testing_Directory_traversal/file_include_(OTG-AUTHZ-001)
-            let dangerCharacters = [":", "%", ">", "<", "./", ".\\", "..", "\\", "//", "/.", "|"]
-            
-            for item in dangerCharacters {
-                if self.contains(item) {
-                    return true
-                }
-            }
-            
-            return false
+            return traversalCharacters.count > 0
+        }
+    }
+    
+    var traversalCharacters: [String] {
+        get {
+            let dangerCharacters = ["%2e", "%2f", "%5c", "%252e", "%252f", "%255c", "%c0%af", "%c1%9c", ":", ">", "<", "./", ".\\", "..", "\\\\", "//", "/.", "\\.", "|"]
+            return dangerCharacters.filter { contains($0) }.flatMap { $0 }
         }
     }
 }
-
 
 public class BrilliantTemplate {
 	var html: String?
