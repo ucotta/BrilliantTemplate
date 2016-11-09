@@ -75,6 +75,18 @@ class BrilliantTemplateTests: XCTestCase {
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
 
     }
+
+    func test_include_error() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">error opening file this_file_doesnt_exist.html The file “this_file_doesnt_exist.html” couldn’t be opened because there is no such file.\n        </div>\n    </body>\n</html>\n"
+
+        
+        let template = BrilliantTemplate(file: "test_include_error.html", data: [:], path: getPathTemplates())
+        
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        
+    }
+    
+    
     
     func test_include_travesal_attack() {
         let HTML_RESULT =  "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">included file not found\n        </div>\n    </body>\n</html>\n"
