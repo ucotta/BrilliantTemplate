@@ -85,6 +85,16 @@ class BrilliantTemplateTests: XCTestCase {
         
     }
     
+    func test_brilliant_tag() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        \n            Single tag to be replaced\n        \n        Hello!\n    </body>\n</html>\n"
+        
+        let template = BrilliantTemplate(file: "test_brilliant_tag.html", data: ["sayHello":"Hello!"], path: getPathTemplates())
+        
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        
+        
+    }
+    
 
 
 	/*

@@ -56,13 +56,22 @@ public class BrilliantTemplate {
 		return "included file not found"
 	}
 
-	func loadIncludes(_ doc:ParserHTML5) {
+	func loadIncludes(doc:ParserHTML5) {
         for include in doc.getAllBy(tagName: "include") {
             if let file = include["file"] {
                 doc.reparseNode(node: include, html: loadfile(file: file))
             }
         }
 	}
+    
+    func cleanBrilliantTag(doc: ParserHTML5) {
+        for brilliant in doc.getAllBy(tagName: "brilliant") {
+            brilliant.replaceBy(string: brilliant.innerHTML)
+        }
+        
+    }
+    
+    
 
 	func processJSids(doc: ParserHTML5, data: [String: Any?]) {
 		while let node: HTMLNode = doc.root.getNextJSid() {
@@ -199,7 +208,6 @@ public class BrilliantTemplate {
 		}
 	}
 
-
 	public func getHTML() -> String {
 		if let t = file {
 			html = loadfile(file: t)
@@ -207,10 +215,12 @@ public class BrilliantTemplate {
 		let doc = ParserHTML5(html: html!);
 
 
-		loadIncludes(doc)
+        loadIncludes(doc: doc)
 		processTids(doc: doc, data:data)
 		processAids(doc: doc, data:data)
 		processJSids(doc: doc, data:data)
+        cleanBrilliantTag(doc: doc)
+        
 
 		return doc.toHTML
 	}
