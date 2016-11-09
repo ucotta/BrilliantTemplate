@@ -9,6 +9,24 @@
 import Foundation
 import BrilliantHTML5Parser
 
+extension String {
+    var containsTraversalCharacters: Bool {
+        get {
+            // https://www.owasp.org/index.php/Testing_Directory_traversal/file_include_(OTG-AUTHZ-001)
+            let dangerCharacters = [":", "%", ">", "<", "./", ".\\", "..", "\\", "//", "/.", "|"]
+            
+            for item in dangerCharacters {
+                if self.contains(item) {
+                    return true
+                }
+            }
+            
+            return false
+        }
+    }
+}
+
+
 public class BrilliantTemplate {
 	var html: String?
 	let file: String?
@@ -29,29 +47,25 @@ public class BrilliantTemplate {
 	}
 
 	func loadfile(file:String) -> String {
+        let finalFile = self.path + "/" + file
 		do {
-			return try String(contentsOfFile: "\(path)/\(file)", encoding: String.Encoding.utf8)
+            if finalFile.containsTraversalCharacters {
+                return "included file not found"
+            }
+			return try String(contentsOfFile: finalFile, encoding: String.Encoding.utf8)
 		} catch let error {
 			print(error)
-
 		}
-		return "<include>file \(file) not found</include>"
+		return "included file not found"
 	}
 
-	/*
-	func loadIncludes(_ doc:HTMLDocument) {
-		for var link in doc.xpath("//include") {
-			if let file = link["file"] {
-				if let tmp = HTML(html: loadfile(file: file), encoding: .utf8) {
-					for div in tmp.xpath("body/ *") {
-						link.addPrevSibling(div)
-					}
-				}
-				link.parent?.removeChild(link)
-			}
-		}
+	func loadIncludes(_ doc:ParserHTML5) {
+        for include in doc.getAllBy(tagName: "include") {
+            if let file = include["file"] {
+                doc.reparseNode(node: include, html: loadfile(file: file))
+            }
+        }
 	}
-	*/
 
 	func processJSids(doc: ParserHTML5, data: [String: Any?]) {
 		while let node: HTMLNode = doc.root.getNextJSid() {
@@ -196,7 +210,7 @@ public class BrilliantTemplate {
 		let doc = ParserHTML5(html: html!);
 
 
-		//loadIncludes(doc)
+		loadIncludes(doc)
 		processTids(doc: doc, data:data)
 		processAids(doc: doc, data:data)
 		processJSids(doc: doc, data:data)

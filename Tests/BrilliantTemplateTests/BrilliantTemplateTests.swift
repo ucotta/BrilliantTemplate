@@ -10,9 +10,16 @@ import XCTest
 @testable import BrilliantTemplate
 
 class BrilliantTemplateTests: XCTestCase {
+    var _pathTemplates: String? = nil
     
     override func setUp() {
         super.setUp()
+        
+        var parts = #file.components(separatedBy: "/")
+        parts.removeLast()
+        parts.append("files")
+        _pathTemplates = parts.map { String($0) }.joined(separator: "/")
+        
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -20,7 +27,11 @@ class BrilliantTemplateTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
+    
+    func getPathTemplates() -> String {
+        return _pathTemplates ?? ""
+    }
+    
 	func test_htmlAttributeLang() {
 		let HTML = "<!DOCTYPE html><html aid=\"lang:lang\"></html>"
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"></html>"
@@ -55,6 +66,25 @@ class BrilliantTemplateTests: XCTestCase {
 		let template = BrilliantTemplate(html: HTML, data: data)
 		XCTAssertEqual(template.getHTML(), HTML_RESULT)
 	}
+    
+    func test_include() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n<body>\n<div class=\"menu\"><span>the file was included</span>\n</div>\n</body>\n</html>\n"
+
+        let template = BrilliantTemplate(file: "test_include.html", data: [:], path: getPathTemplates())
+        
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+
+    }
+    
+    func test_include_travesal_attack() {
+        let HTML_RESULT =  "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">included file not found\n        </div>\n    </body>\n</html>\n"
+        let template = BrilliantTemplate(file: "test_include_travesal_attack.html", data: [:], path: getPathTemplates())
+        
+        
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        
+    }
+    
 
 
 	/*
