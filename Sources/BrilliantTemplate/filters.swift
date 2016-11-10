@@ -56,6 +56,9 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             case "!":
                 value = value < filter ? value : ""
                 
+            case "?":
+                value = filter
+                
             default:
                 return (value: "filter: \(c)\(filter) not supported", result: .ok)
             }
