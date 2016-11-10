@@ -27,7 +27,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 
 		switch filter {
         case "notempty":
-            if value == "" {
+            if value.isEmpty {
                 result = .removeNode
             }
 		case "cap":
@@ -56,8 +56,11 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             case "!":
                 value = value < filter ? value : ""
                 
-            case "?":
+            case "?" where !value.isEmpty:
                 value = filter
+                
+            case "?":
+                continue
                 
             default:
                 return (value: "filter: \(c)\(filter) not supported", result: .ok)

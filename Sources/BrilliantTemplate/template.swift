@@ -216,7 +216,7 @@ public class BrilliantTemplate {
 						print("\(parts[0]) not supported")
 					}
 
-					if attributeValue != nil {
+					if attributeValue != nil && !attributeValue!.isEmpty {
                         if node[attribute] == nil {
                             node[attribute] = attributeValue
                         } else {
