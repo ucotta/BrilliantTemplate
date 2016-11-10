@@ -8,17 +8,28 @@
 
 import Foundation
 
+private let COMPARABLE = "<>=!".characters
 
+enum FilterAction { case ok, removeNode }
 
-func filterString(value _val: String, filters _filters: [String]) -> String {
+func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction) {
 	var filters = _filters
 	var value:String = _val
+    var result: FilterAction = .ok
 
 	filters.remove(at: 0)
 	while filters.count > 0 {
-		let filter = filters.remove(at: 0)
+        var filter:String = filters.remove(at: 0)
+        
+        if filter.isEmpty {
+            continue
+        }
 
 		switch filter {
+        case "notempty":
+            if value == "" {
+                result = .removeNode
+            }
 		case "cap":
 			value = value.capitalized
 
@@ -27,17 +38,37 @@ func filterString(value _val: String, filters _filters: [String]) -> String {
 
 		case "lower":
 			value = value.lowercased()
-
+            
 		default:
-			return "filter: \(filter) not supported"
+            // Comparable filter has two parts, first character is operator, the rest are value to by compared.
+            let c: Character = filter.characters.popFirst()!
+            
+            switch c {
+            case "=":
+                value = value == filter ? value : ""
+                
+            case "<":
+                value = value < filter ? value : ""
+                
+            case ">":
+                value = value > filter ? value : ""
+                
+            case "!":
+                value = value < filter ? value : ""
+                
+            default:
+                return (value: "filter: \(c)\(filter) not supported", result: .ok)
+            }
 		}
 	}
-	return value
+    return (value: value, result: result)
 }
 
 
-func filterNumber(value: NSNumber, filters: [String]) -> String {
-	if filters.count > 1 {
+func filterNumber(value: NSNumber, filters: [String]) -> (value: String, result: FilterAction)  {
+    var result: FilterAction = .ok
+
+    if filters.count > 1 {
 		var filter = filters[1], option1 = "", option2 = ""
 		if filter.contains("/") {
 			var tmp = filters[1].components(separatedBy: "/")
@@ -50,7 +81,7 @@ func filterNumber(value: NSNumber, filters: [String]) -> String {
 			let formatter = NumberFormatter()
 			formatter.numberStyle = .currency
 			formatter.locale = option1 == "" ? Locale.current : Locale(identifier: option1)
-			return formatter.string(from: value) ?? "currency error in \(value)"
+            return (value: formatter.string(from: value) ?? "currency error in \(value)", result: .ok)
 
 		} else if filter == "decimal" {
 			let formatter = NumberFormatter()
@@ -60,10 +91,10 @@ func filterNumber(value: NSNumber, filters: [String]) -> String {
 				formatter.minimumFractionDigits = Int(option2) ?? 2
 				formatter.maximumFractionDigits = Int(option2) ?? 2
 			}
-			return formatter.string(from: value) ?? "decimal error in \(value)"
+            return (value: formatter.string(from: value) ?? "decimal error in \(value)", result: .ok)
 
 		}
 	}
-	return "\(value)"
+    return (value: "\(value)", result: result)
 }
 

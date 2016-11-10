@@ -34,6 +34,7 @@ public class BrilliantTemplate {
 		self.file = file
 		self.data = data ?? [:]
 		self.path = path
+        html = loadfile(file: file)
 	}
 
 	public init(html: String, data:[String:Any?]? = nil, path: String = ".") {
@@ -53,7 +54,6 @@ public class BrilliantTemplate {
         } catch { // let error {
             return "error opening file \(file)" // \(error.localizedDescription)"
 		}
-		return "included file not found"
 	}
 
 	func loadIncludes(doc:ParserHTML5) {
@@ -109,12 +109,25 @@ public class BrilliantTemplate {
 					switch variable {
 					case let v as String:
 						node.removeNodes()
-						node.addNode(node: TextHTML(text: filterString(value: v, filters: parts)))
+                        let r = filterString(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            node.addNode(node: TextHTML(text: r.value))
+                        case .removeNode:
+                            node.parentNode = nil
+                        }
 
 					case let v as NSNumber:
 						node.removeNodes()
-						node.addNode(node: TextHTML(text: filterNumber(value: v, filters: parts)))
 
+                        node.removeNodes()
+                        let r = filterNumber(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            node.addNode(node: TextHTML(text: r.value))
+                        case .removeNode:
+                            node.parentNode = nil
+                        }
 
 					case let v as [[String: Any?]]:
 						// Array of dictionaries
@@ -178,10 +191,25 @@ public class BrilliantTemplate {
 
 					switch variable {
 					case let v as String:
-						attributeValue = filterString(value: v, filters: parts)
+                        let r = filterString(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            attributeValue = r.value
+                        default:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
+						
 
 					case let v as NSNumber:
-						attributeValue = filterNumber(value: v, filters: parts)
+						let r = filterNumber(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            attributeValue = r.value
+                        default:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
 
 					default:
 						node["aid"] = "\(variable) not supported"
@@ -189,13 +217,19 @@ public class BrilliantTemplate {
 					}
 
 					if attributeValue != nil {
-						node["aid"] = nil
-						node[attribute] = attributeValue
+                        if node[attribute] == nil {
+                            node[attribute] = attributeValue
+                        } else {
+                            node[attribute] = node[attribute]! + " " + attributeValue!
+                        }
 					}
+                    node["aid"] = nil
 
 				} else {
 					node["aid"] = nil
-					node[attribute] = ""
+                    if node[attribute] == nil {
+                        node[attribute] = ""
+                    }
 				}
 			}
 
@@ -209,11 +243,7 @@ public class BrilliantTemplate {
 	}
 
 	public func getHTML() -> String {
-		if let t = file {
-			html = loadfile(file: t)
-		}
 		let doc = ParserHTML5(html: html!);
-
 
         loadIncludes(doc: doc)
 		processTids(doc: doc, data:data)
@@ -221,7 +251,6 @@ public class BrilliantTemplate {
 		processJSids(doc: doc, data:data)
         cleanBrilliantTag(doc: doc)
         
-
 		return doc.toHTML
 	}
 

@@ -107,6 +107,23 @@ class BrilliantTemplateTests: XCTestCase {
         
     }
     
+    func test_attribute_plus() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"previouClass newClass otherClass\"></div>\n    </body>\n</html>\n"
+
+        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["extra":"newClass otherClass"], path: getPathTemplates())
+        
+        print(template.getHTML())
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        
+    }
+    
+    func test_attribute_comparable() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1 data-id=\"10\">&gt; 11</h1>\n        <h1 data-id=\"10\">&lt; 09</h1>\n        <!-- test with tid -->\n        \n        <h2>10</h2>\n        <h2>10</h2>\n        <h2>10</h2>\n    </body>\n</html>\n"
+
+        let template = BrilliantTemplate(file: "test_attribute_comparable.html", data: ["value":"10"], path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+    }
+    
 
 
 	/*
