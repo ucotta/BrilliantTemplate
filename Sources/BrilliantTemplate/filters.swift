@@ -9,10 +9,108 @@
 import Foundation
 import PerfectLib
 import HTMLEntities
+import BrilliantHTML5Parser
 
 private let COMPARABLE = "<>=!".characters
 
 enum FilterAction { case ok, removeNode }
+
+
+
+extension String {
+	mutating func removePrefix(prefix: String) {
+	}
+}
+
+func removePrefix(string s: String, prefix: String) -> String {
+	var string = s
+	if string == prefix {
+		return ""
+	}
+	string.removeSubrange(string.startIndex ... string.index(string.startIndex, offsetBy: prefix.characters.count-1))
+	return string
+}
+
+func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction) {
+	var filters = _filters
+	var value:Date = _val
+	var result: FilterAction = .ok
+	var stringResult: String = ""
+	let formatter = DateFormatter()
+	var escapeMethod = "htmlencode"
+
+
+	formatter.timeStyle = .short
+	formatter.dateStyle = .short
+
+
+	filters.remove(at: 0)
+	while filters.count > 0 {
+		var filter:String = filters.remove(at: 0)
+
+		if filter.isEmpty {
+			continue
+		}
+
+		switch filter {
+		case "raw":
+			escapeMethod = "raw"
+		case "urlencode":
+			escapeMethod = "urlencode"
+
+		case "htmlencode":
+			escapeMethod = "htmlencode"
+
+		case "date":
+			formatter.timeStyle = .none
+			formatter.dateStyle = .short
+
+		case "time":
+			formatter.dateStyle = .none
+			formatter.timeStyle = .short
+
+		case "datetime":
+			formatter.dateStyle = .short
+			formatter.timeStyle = .short
+
+		case "short":
+			formatter.dateStyle = formatter.dateStyle != .none ? .short : .none
+			formatter.timeStyle = formatter.timeStyle != .none ? .short : .none
+
+		case "medium":
+			formatter.dateStyle = formatter.dateStyle != .none ? .medium : .none
+			formatter.timeStyle = formatter.timeStyle != .none ? .medium : .none
+
+		case "long":
+			formatter.dateStyle = formatter.dateStyle != .none ? .long : .none
+			formatter.timeStyle = formatter.timeStyle != .none ? .long : .none
+
+		case "full":
+			formatter.dateStyle = formatter.dateStyle != .none ? .full : .none
+			formatter.timeStyle = formatter.timeStyle != .none ? .full : .none
+		default:
+			if filter.contains(string: "_") {
+				formatter.locale = Locale(identifier: filter)
+			} else if filter.hasPrefix("format/") {
+				var tmp = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
+				formatter.dateFormat = tmp
+			} else {
+				return (value: "filter: \(filter) not supported", result: .ok)
+			}
+		}
+
+	}
+
+
+	stringResult = formatter.string(from: value)
+
+	if escapeMethod == "htmlencode" {
+		stringResult = stringResult.htmlEscape()
+	} else if escapeMethod == "urlencode" {
+		stringResult = stringResult.stringByEncodingURL
+	}
+	return (value: stringResult, result: result)
+}
 
 
 func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction) {

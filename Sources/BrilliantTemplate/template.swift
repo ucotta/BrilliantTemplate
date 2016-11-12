@@ -102,7 +102,8 @@ public class BrilliantTemplate {
 			if (tid.isEmpty) {
 				node.addNode(node: TextHTML(text: "/* Empty tid cannot be used */"))
 			} else {
-				var parts = tid.components(separatedBy: ":")
+				var escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
+				var parts = escaped.components(separatedBy: ":")
 
 				if let variable = data[parts[0]] {
 
@@ -110,6 +111,16 @@ public class BrilliantTemplate {
 					case let v as String:
 						node.removeNodes()
                         let r = filterString(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            node.addNode(node: TextHTML(text: r.value))
+                        case .removeNode:
+                            node.parentNode = nil
+                        }
+
+					case let v as Date:
+						node.removeNodes()
+                        let r = filterDate(value: v, filters: parts)
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
@@ -200,6 +211,16 @@ public class BrilliantTemplate {
                             node.parentNode = nil
                         }
 						
+					case let v as Date:
+                        let r = filterDate(value: v, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            attributeValue = r.value
+                        default:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
+
 
 					case let v as NSNumber:
 						let r = filterNumber(value: v, filters: parts)
