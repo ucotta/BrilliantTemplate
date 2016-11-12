@@ -126,13 +126,114 @@ class BrilliantTemplateTests: XCTestCase {
     
 
 
+	func test_filters_boolean() {
+		func isEqual(_ comp: (value: String, result: FilterAction), _ value:String, _ action:FilterAction) -> Bool {
+			return value == comp.value && comp.result == action
+		}
+
+		// Replace value in attribute:  <span aid="class:var:true?warning"> => <span class="warning"> if var = true
+		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var:true:?itistrue".components(separatedBy: ":")), "itistrue", .ok), "var:true:?itistrue")
+		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var:false:?itistrue".components(separatedBy: ":")), "", .ok), "var:true:?itistrue")
+		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var".components(separatedBy: ":")), "true", .ok), "var")
+		XCTAssertTrue(isEqual(filterBoolAID(value: false, filters: "var".components(separatedBy: ":")), "false", .ok), "var")
+
+		// Remove tag:  <span tid="var:true">  => <span> if true, removed if false
+		XCTAssertTrue(isEqual(filterBoolTID(value: true, filters: "var:true".components(separatedBy: ":")), "", .ok), "var:true")
+		XCTAssertTrue(isEqual(filterBoolTID(value: false, filters: "var:false".components(separatedBy: ":")), "", .ok), "var:true")
+		XCTAssertFalse(isEqual(filterBoolTID(value: true, filters: "var:false".components(separatedBy: ":")), "", .ok), "var:false")
+		XCTAssertFalse(isEqual(filterBoolTID(value: false, filters: "var:true".components(separatedBy: ":")), "", .ok), "var:true")
+	}
+
+
 	/*
-    
+
+	func filterBoolTID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
+	var filters = _filters
+	let value: Bool = _val
+	var result: FilterAction = .ok
+
+	filters.remove(at: 0)
+	while filters.count > 0 {
+	let filter: String = filters.remove(at: 0)
+
+	if filter.isEmpty {
+	continue
+	}
+
+	switch filter.lowercased() {
+	case "true":
+	result = value ? .ok : .removeNode
+
+	case "false":
+	result = !value ? .ok : .removeNode
+
+	default:
+	return (value: "filter: \(filter) not supported", result: .ok)
+	}
+
+	}
+
+	return (value: "", result: result)
+	}
+
+	func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
+	var filters = _filters
+	let value:Bool = _val
+	var result: FilterAction = .ok
+	var stringResult = ""
+
+	if value {
+	stringResult = "true"
+	} else {
+	stringResult = "false"
+	}
+
+	filters.remove(at: 0)
+	while filters.count > 0 {
+	let filter:String = filters.remove(at: 0)
+
+	if filter.isEmpty {
+	continue
+	}
+
+	switch filter.lowercased() {
+	case "true":
+	result = value ? .ok : .returnNone
+
+	case "false":
+	result = !value ? .ok : .returnNone
+
+	default:
+	if filter.hasPrefix("?") {
+	stringResult = removePrefix(string: filter, prefix: "?")
+	} else {
+	return (value: "filter: \(filter) not supported", result: .ok)
+	}
+	}
+
+	}
+
+	if result == .returnNone {
+	return (value: "", result: .ok)
+	}
+
+	return (value: stringResult, result: .ok)
+	}
+
+
+
+*/
+
+
+
+
+	/*
+
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
-    
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PerfectLib
+//import PerfectLib
 import HTMLEntities
 import BrilliantHTML5Parser
 
@@ -184,7 +184,8 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
     if escapeMethod == "htmlencode" {
         stringResult = stringResult.htmlEscape()
     } else if escapeMethod == "urlencode" {
-        stringResult = stringResult.stringByEncodingURL
+		// import a library.
+        //stringResult = stringResult.stringByEncodingURL
     }
     return (value: stringResult, result: result)
 }
@@ -263,7 +264,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
     if escapeMethod == "htmlencode" {
         value = value.htmlEscape()
     } else if escapeMethod == "urlencode" {
-        value = value.stringByEncodingURL
+        //value = value.stringByEncodingURL
     }
 
     return (value: value.htmlEscape(), result: result)
