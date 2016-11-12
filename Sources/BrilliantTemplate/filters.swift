@@ -33,8 +33,8 @@ func removePrefix(string s: String, prefix: String) -> String {
 
 func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction) {
 	var filters = _filters
-	var value:Date = _val
-	var result: FilterAction = .ok
+	let value:Date = _val
+	let result: FilterAction = .ok
 	var stringResult: String = ""
 	var escapeMethod = "htmlencode"
 
@@ -46,7 +46,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 
 	filters.remove(at: 0)
 	while filters.count > 0 {
-		var filter:String = filters.remove(at: 0)
+		let filter:String = filters.remove(at: 0)
 
 		if filter.isEmpty {
 			continue
@@ -101,8 +101,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 			if filter.contains(string: "_") {
 				formatter.locale = Locale(identifier: filter)
 			} else if filter.hasPrefix("format/") {
-				var tmp = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
-				formatter.dateFormat = tmp
+				formatter.dateFormat = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
 			} else {
 				return (value: "filter: \(filter) not supported", result: .ok)
 			}
