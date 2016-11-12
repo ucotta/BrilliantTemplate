@@ -36,12 +36,10 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 	var value:Date = _val
 	var result: FilterAction = .ok
 	var stringResult: String = ""
-	let formatter = DateFormatter()
-	formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
-
 	var escapeMethod = "htmlencode"
 
-
+	let formatter = DateFormatter()
+	formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
 	formatter.timeStyle = .short
 	formatter.dateStyle = .short
 
