@@ -15,7 +15,7 @@ extension String {
             return traversalCharacters.count > 0
         }
     }
-    
+
     var traversalCharacters: [String] {
         get {
             let dangerCharacters = ["%2e", "%2f", "%5c", "%252e", "%252f", "%255c", "%c0%af", "%c1%9c", ":", ">", "<", "./", ".\\", "..", "\\\\", "//", "/.", "\\.", "|"]
@@ -63,15 +63,15 @@ public class BrilliantTemplate {
             }
         }
 	}
-    
+
     func cleanBrilliantTag(doc: ParserHTML5) {
         for brilliant in doc.getAllBy(tagName: "brilliant") {
             brilliant.replaceBy(string: brilliant.innerHTML)
         }
-        
+
     }
-    
-    
+
+
 
 	func processJSids(doc: ParserHTML5, data: [String: Any?]) {
 		while let node: HTMLNode = doc.root.getNextJSid() {
@@ -102,7 +102,7 @@ public class BrilliantTemplate {
 			if (tid.isEmpty) {
 				node.addNode(node: TextHTML(text: "/* Empty tid cannot be used */"))
 			} else {
-				var escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
+				let escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
 				var parts = escaped.components(separatedBy: ":")
 
 				if let variable = data[parts[0]] {
@@ -114,7 +114,7 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
-                        case .removeNode:
+                        default:
                             node.parentNode = nil
                         }
 
@@ -124,19 +124,23 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
-                        case .removeNode:
+                        default:
                             node.parentNode = nil
                         }
 
-					case let v as NSNumber:
-						node.removeNodes()
+					case let v as Bool:
+						if filterBoolTID(value: v, filters: parts).result == .removeNode {
+                            node.removeNodes()
+							node.parentNode = nil
+						}
 
+					case let v as NSNumber:
                         node.removeNodes()
                         let r = filterNumber(value: v, filters: parts)
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
-                        case .removeNode:
+                        default:
                             node.parentNode = nil
                         }
 
@@ -152,6 +156,7 @@ public class BrilliantTemplate {
 
 					default:
 						print("\(parts[0]) not supported")
+						//rint(variable)
 					}
 
 				} else {
@@ -210,7 +215,7 @@ public class BrilliantTemplate {
                             node.removeNodes()
                             node.parentNode = nil
                         }
-						
+
 					case let v as Date:
                         let r = filterDate(value: v, filters: parts)
                         switch r.result {
@@ -221,6 +226,11 @@ public class BrilliantTemplate {
                             node.parentNode = nil
                         }
 
+                    case let v as Bool:
+                        if filterBoolAID(value: v, filters: parts).result == .removeNode {
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
 
 					case let v as NSNumber:
 						let r = filterNumber(value: v, filters: parts)
@@ -271,7 +281,7 @@ public class BrilliantTemplate {
 		processAids(doc: doc, data:data)
 		processJSids(doc: doc, data:data)
         cleanBrilliantTag(doc: doc)
-        
+
 		return doc.toHTML
 	}
 
