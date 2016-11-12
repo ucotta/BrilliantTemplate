@@ -37,6 +37,8 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 	var result: FilterAction = .ok
 	var stringResult: String = ""
 	let formatter = DateFormatter()
+	formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+
 	var escapeMethod = "htmlencode"
 
 
@@ -52,7 +54,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 			continue
 		}
 
-		switch filter {
+		switch filter.lowercased() {
 		case "raw":
 			escapeMethod = "raw"
 		case "urlencode":
@@ -60,6 +62,15 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 
 		case "htmlencode":
 			escapeMethod = "htmlencode"
+
+		case "iso8601":
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
+			formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+
+		case "rfc2616":
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.dateFormat = "E, dd-MMM-YYY HH:mm:ss z"
 
 		case "date":
 			formatter.timeStyle = .none
