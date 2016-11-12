@@ -144,103 +144,47 @@ class BrilliantTemplateTests: XCTestCase {
 		XCTAssertFalse(isEqual(filterBoolTID(value: false, filters: "var:true".components(separatedBy: ":")), "", .ok), "var:true")
 	}
 
+	func test_filters_date() {
+		func isEqual(_ comp: (value: String, result: FilterAction), _ value:String, _ action:FilterAction) -> Bool {
+			print("\t\t####### [\(comp.value)] == [\(value)]")
+			return value == comp.value && comp.result == action
+		}
 
-	/*
 
-	func filterBoolTID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
-	var filters = _filters
-	let value: Bool = _val
-	var result: FilterAction = .ok
+		// Basic dates
+		// 15/nov/2016 6:35am
 
-	filters.remove(at: 0)
-	while filters.count > 0 {
-	let filter: String = filters.remove(at: 0)
+		let date = Date(timeIntervalSince1970: 1479184514)
+		//var a = filterDate(value: "datetime", filters: "var:date".components(separatedBy: ":"))
 
-	if filter.isEmpty {
-	continue
-	}
+		TEMPLATE_DEFAULT_LOCALE = Locale(identifier: "en_EN")
 
-	switch filter.lowercased() {
-	case "true":
-	result = value ? .ok : .removeNode
+		// ISO and RFC dates
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:ISO8601".components(separatedBy: ":")), "2016-11-15T04:35:14.000Z", .ok), "iso8601")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:RFC2616".components(separatedBy: ":")), "Tue, 15-Nov-2016 06:35:14 GMT+2", .ok), "RFC2616")
 
-	case "false":
-	result = !value ? .ok : .removeNode
+		// Date, Time, Datetime
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:date".components(separatedBy: ":")), "11/15/16", .ok), "date")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:time".components(separatedBy: ":")), "6:35 AM", .ok), "time")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var".components(separatedBy: ":")), "11/15/2016 06:35:14", .ok), "no filters")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:datetime".components(separatedBy: ":")), "11/15/16, 6:35 AM", .ok), "datetime")
 
-	default:
-	return (value: "filter: \(filter) not supported", result: .ok)
-	}
+		// Style formatter, full, long, medium and short
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:full".components(separatedBy: ":")), "Tuesday, November 15, 2016 at 6:35:14 AM Eastern European Standard Time", .ok), "full")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:long".components(separatedBy: ":")), "November 15, 2016 at 6:35:14 AM GMT+2", .ok), "long")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:medium".components(separatedBy: ":")), "Nov 15, 2016, 6:35:14 AM", .ok), "medium")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short".components(separatedBy: ":")), "11/15/16, 6:35 AM", .ok), "short")
 
-	}
+		// International dates (US, UK, ES, EE, JP AND ZH)
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:en_US".components(separatedBy: ":")), "11/15/16, 6:35 AM", .ok), "en_UK")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:en_UK".components(separatedBy: ":")), "15/11/2016, 06:35", .ok), "en_UK")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:es_ES".components(separatedBy: ":")), "15/11/16 6:35", .ok), "es_ES")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:et_EE".components(separatedBy: ":")), "15.11.16 6:35", .ok), "et_EE")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:ja_JP".components(separatedBy: ":")), "2016/11/15 6:35", .ok), "ja_JP")
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:short:zh_ZH".components(separatedBy: ":")), "2016/11/15 &#x4E0A;&#x5348;6:35", .ok), "zh_ZH")
 
-	return (value: "", result: result)
-	}
-
-	func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
-	var filters = _filters
-	let value:Bool = _val
-	var result: FilterAction = .ok
-	var stringResult = ""
-
-	if value {
-	stringResult = "true"
-	} else {
-	stringResult = "false"
-	}
-
-	filters.remove(at: 0)
-	while filters.count > 0 {
-	let filter:String = filters.remove(at: 0)
-
-	if filter.isEmpty {
-	continue
-	}
-
-	switch filter.lowercased() {
-	case "true":
-	result = value ? .ok : .returnNone
-
-	case "false":
-	result = !value ? .ok : .returnNone
-
-	default:
-	if filter.hasPrefix("?") {
-	stringResult = removePrefix(string: filter, prefix: "?")
-	} else {
-	return (value: "filter: \(filter) not supported", result: .ok)
-	}
-	}
+		// Custom format: the class will control escape \:, the original string was:  "var:format/MM/dd/yyyy hh\:mm\:ss" but was splitted for this test
+		XCTAssertTrue(isEqual(filterDate(value: date, filters: ["var", "format/MM/dd/yyyy hh:mm:ss"]), "11/15/2016 06:35:14", .ok), "customFormat")
 
 	}
-
-	if result == .returnNone {
-	return (value: "", result: .ok)
-	}
-
-	return (value: stringResult, result: .ok)
-	}
-
-
-
-*/
-
-
-
-
-	/*
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
-	*/
-    
 }

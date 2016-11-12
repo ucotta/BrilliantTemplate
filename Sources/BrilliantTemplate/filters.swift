@@ -13,6 +13,8 @@ import BrilliantHTML5Parser
 
 private let COMPARABLE = "<>=!".characters
 
+public var TEMPLATE_DEFAULT_LOCALE = Locale.current
+
 enum FilterAction {
     case ok, removeNode, returnNone
 }
@@ -108,9 +110,10 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
     var escapeMethod = "htmlencode"
 
     let formatter = DateFormatter()
+	formatter.locale = TEMPLATE_DEFAULT_LOCALE
+	formatter.timeStyle = .short
+	formatter.dateStyle = .short
     formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
-    formatter.timeStyle = .short
-    formatter.dateStyle = .short
 
 
     filters.remove(at: 0)
