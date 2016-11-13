@@ -9,20 +9,53 @@
 import Foundation
 import BrilliantHTML5Parser
 
-extension String {
-    var containsTraversalCharacters: Bool {
-        get {
-            return traversalCharacters.count > 0
-        }
-    }
 
-    var traversalCharacters: [String] {
-        get {
-            let dangerCharacters = ["%2e", "%2f", "%5c", "%252e", "%252f", "%255c", "%c0%af", "%c1%9c", ":", ">", "<", "./", ".\\", "..", "\\\\", "//", "/.", "\\.", "|"]
-            return dangerCharacters.filter { contains($0) }.flatMap { $0 }
+#if os(Linux)
+    // realpath is not working in linux
+    private func loadfile(file:String, in path:String) -> String {
+        func containsTraversalCharacters(data:String) -> Bool {
+            let dangerCharacters = ["%2e", "%2f", "%5c", "%25", "%c0%af", "%c1%9c", ":", ">", "<", "./", ".\\", "..", "\\\\", "//", "/.", "\\.", "|"]
+            return (dangerCharacters.filter { data.contains($0) }.flatMap { $0 }).count > 0
         }
+        
+        var result = "cannot open file \(file)"
+        
+        let tmp = path + "/" + file
+        do {
+            if !containsTraversalCharacters(data:tmp) {
+                result = try String(contentsOfFile: tmp, encoding: String.Encoding.utf8)
+            }
+        } catch {
+        }
+        return result
     }
-}
+#else
+    private func loadfile(file:String, in path:String) -> String {
+        func rp(path: String) -> String? {
+            let p = realpath(path, nil)
+            if p == nil {
+                return nil
+            }
+            defer { free(p) }
+            
+            return String(validatingUTF8: p!)
+        }
+        
+        let tmp = path + "/" + file
+        var result = "cannot open file \(file)"
+        do {
+            if let file = rp(path: tmp) {
+                if file.hasPrefix(path) {
+                    result = try String(contentsOfFile: file, encoding: String.Encoding.utf8)
+                } else {
+                    print("Trying to acces file: \(file) outside path \(path)")
+                }
+            }
+        } catch {}
+        return result
+    }
+#endif
+
 
 public class BrilliantTemplate {
 	var html: String?
@@ -34,7 +67,7 @@ public class BrilliantTemplate {
 		self.file = file
 		self.data = data ?? [:]
 		self.path = path
-        html = loadfile(file: file)
+        html = loadfile(file: file, in: path)
 	}
 
 	public init(html: String, data:[String:Any?]? = nil, path: String = ".") {
@@ -43,23 +76,11 @@ public class BrilliantTemplate {
 		self.path = path
 		self.file = nil
 	}
-
-	func loadfile(file:String) -> String {
-        let finalFile = self.path + "/" + file
-		do {
-            if finalFile.containsTraversalCharacters {
-                return "included file not found"
-            }
-			return try String(contentsOfFile: finalFile, encoding: String.Encoding.utf8)
-        } catch { // let error {
-            return "error opening file \(file)" // \(error.localizedDescription)"
-		}
-	}
-
+    
 	func loadIncludes(doc:ParserHTML5) {
         for include in doc.getAllBy(tagName: "include") {
             if let file = include["file"] {
-                doc.reparseNode(node: include, html: loadfile(file: file))
+                doc.reparseNode(node: include, html: loadfile(file: file, in: path))
             }
         }
 	}

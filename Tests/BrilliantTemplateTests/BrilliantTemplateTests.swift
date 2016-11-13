@@ -77,7 +77,7 @@ class BrilliantTemplateTests: XCTestCase {
     }
 
     func test_include_error() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">error opening file this_file_doesnt_exist.html\n        </div>\n    </body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">cannot open file this_file_doesnt_exist.html\n        </div>\n    </body>\n</html>\n"
 
         
         let template = BrilliantTemplate(file: "test_include_error.html", data: [:], path: getPathTemplates())
@@ -89,7 +89,7 @@ class BrilliantTemplateTests: XCTestCase {
     
     
     func test_include_travesal_attack() {
-        let HTML_RESULT =  "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">included file not found\n        </div>\n    </body>\n</html>\n"
+        let HTML_RESULT =  "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">cannot open file ../BrilliantTemplateTests.swift\n        </div>\n    </body>\n</html>\n"
         let template = BrilliantTemplate(file: "test_include_travesal_attack.html", data: [:], path: getPathTemplates())
         
         
