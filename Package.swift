@@ -16,3 +16,4 @@ let package = Package(
 		.Package(url: "https://github.com/ucotta/BrilliantHTML5Parser.git", majorVersion: 0)
 	]
 )
+
