@@ -92,8 +92,6 @@ public class BrilliantTemplate {
 
     }
 
-
-
 	func processJSids(doc: ParserHTML5, data: [String: Any?]) {
 		while let node: HTMLNode = doc.root.getNextJSid() {
 			if let jsid = node["jsid"] {
