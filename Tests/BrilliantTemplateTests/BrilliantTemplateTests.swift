@@ -205,6 +205,17 @@ class BrilliantTemplateTests: XCTestCase {
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
     }
     
+    func test_conditional() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>bool is not true</h1>\n        <h1>something</h1>\n    </body>\n</html>\n"
+        
+        let data: [String: Any?] = [
+            "bool": false,
+            "name": "something"
+        ]
+        
+        let template = BrilliantTemplate(file: "test_conditional.html", data: data, path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+    }
     
     
     
