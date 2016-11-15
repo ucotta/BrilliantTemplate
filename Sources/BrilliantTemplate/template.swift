@@ -250,6 +250,7 @@ public class BrilliantTemplate {
 	func processArray(node: HTMLNode, values: [[String: Any?]]) {
 		for p in 0..<values.count {
 			let newNode = node.copyNode()
+            newNode["tid"] = nil
 			var mergedData = data
 			// Join data with new values
 			for (key,val) in values[p] {
