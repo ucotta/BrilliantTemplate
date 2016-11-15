@@ -16,7 +16,7 @@ private let COMPARABLE = "<>=!".characters
 public var TEMPLATE_DEFAULT_LOCALE = Locale.current
 
 enum FilterAction {
-    case ok, removeNode, returnNone
+    case ok, removeNode, returnNone, remainNodes
 }
 
 
@@ -219,13 +219,10 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             escapeMethod = "htmlencode"
 
         case "notempty", "true":
-            if value.isEmpty {
-                result = .removeNode
-            }
+            result = value.isEmpty ? .removeNode : .remainNodes
         case "empty", "false":
-            if !value.isEmpty {
-                result = .removeNode
-            }
+            result = value.isEmpty ? .remainNodes : .removeNode
+
         case "cap":
             value = value.capitalized
 

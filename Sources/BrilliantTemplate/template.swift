@@ -155,13 +155,15 @@ public class BrilliantTemplate {
 
 					switch variable {
 					case let v as String:
-						node.removeNodes()
                         let r = filterString(value: v, filters: parts)
                         switch r.result {
                         case .ok:
+                            node.removeNodes()
                             node.addNode(node: TextHTML(text: r.value))
-                        default:
+                        case .removeNode:
+                            node.removeNodes()
                             node.parentNode = nil
+                        default: break
                         }
 
 					case let v as Date:
@@ -170,8 +172,10 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
-                        default:
+                        case .removeNode:
+                            node.removeNodes()
                             node.parentNode = nil
+                        default: break
                         }
 
 					case let v as Bool:
@@ -186,8 +190,10 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             node.addNode(node: TextHTML(text: r.value))
-                        default:
+                        case .removeNode:
+                            node.removeNodes()
                             node.parentNode = nil
+                        default: break
                         }
 
 					case let v as [[String: Any?]]:
