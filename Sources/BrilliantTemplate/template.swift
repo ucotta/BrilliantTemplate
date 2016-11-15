@@ -117,6 +117,31 @@ public class BrilliantTemplate {
 			node["tid"] = nil
 		}
 	}
+    
+    func untieVar(name:String, data: [String: Any?]) -> Any? {
+        var item: Any = data
+        var keys: [String] = name.components(separatedBy: ".")
+        
+        var path = ""
+        while keys.count > 0 {
+            let key = keys.remove(at: 0)
+            
+            if item is [String: Any] && keys.count > 0 {
+                let tmp = item as! [String: Any]
+                if tmp[key] == nil {
+                    return nil
+                }
+                item = tmp[key]!
+            } else if item is [String: Any] {
+                let tmp = item as! [String: Any]
+                return tmp[key]
+            } else {
+                return "/* error key \"\(path)\" is not a dictionary */"
+            }
+            path += (path.isEmpty ? "" : ".") + key
+        }
+        return item
+    }
 
 	func processTids(node: HTMLNode, data: [String: Any?] ) {
 		if let tid = node["tid"] {
@@ -126,7 +151,7 @@ public class BrilliantTemplate {
 				let escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
 				var parts = escaped.components(separatedBy: ":")
 
-				if let variable = data[parts[0]] {
+                if let variable = untieVar(name: parts[0], data: data) {
 
 					switch variable {
 					case let v as String:
@@ -223,7 +248,8 @@ public class BrilliantTemplate {
 			} else {
 				let attribute = parts.remove(at: 0)
 
-				if let variable = data[parts[0]] {
+                if let variable = untieVar(name: parts[0], data: data) {
+				//if let variable = data[parts[0]] {
 					var attributeValue: String? = nil
 
 					switch variable {

@@ -187,4 +187,25 @@ class BrilliantTemplateTests: XCTestCase {
 		XCTAssertTrue(isEqual(filterDate(value: date, filters: ["var", "format/MM/dd/yyyy hh:mm:ss"]), "11/15/2016 06:35:14", .ok), "customFormat")
 
 	}
+    
+    func test_dictionary() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>test dictionary</h1>\n        <div>\n            <span>100</span>\n            <span>test 100</span>\n            <span>11/15/2016 06:35:14</span>\n            <span>/* error key &amp;quot;obj.name&amp;quot; is not a dictionary */</span>\n            <span>/* \"obj.error\" not found! */</span>\n            \n            <span id=\"100\">id</span>\n            <span name=\"test 100\">name</span>\n            <span date=\"11/15/2016 06:35:14\">date</span>\n            <span name-error=\"/* error key &amp;quot;obj.name&amp;quot; is not a dictionary */\">name.error</span>\n            <span error=\"\">error</span>\n        </div>\n    </body>\n</html>\n"
+        
+        let data: [String: Any?] = [
+            "testName":"test dictionary",
+            "obj": [
+                "id": 100,
+                "name": "test 100",
+                "date": Date(timeIntervalSince1970: 1479184514)
+            ],
+            "color": "#ff0000"
+        ]
+        
+        let template = BrilliantTemplate(file: "test_dictionary.html", data: data, path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+    }
+    
+    
+    
+    
 }
