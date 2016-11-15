@@ -264,6 +264,8 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             attributeValue = r.value
+                        case .plus:
+                            attributeValue = (node[attribute] ?? "") + r.value
                         default:
                             node.removeNodes()
                             node.parentNode = nil
@@ -301,11 +303,11 @@ public class BrilliantTemplate {
 					}
 
 					if attributeValue != nil && !attributeValue!.isEmpty {
-                        if node[attribute] == nil {
-                            node[attribute] = attributeValue
-                        } else {
-                            node[attribute] = node[attribute]! + " " + attributeValue!
-                        }
+                        //if node[attribute] == nil {
+                        node[attribute] = attributeValue
+                        //} else {
+                        //    node[attribute] = node[attribute]! + " " + attributeValue!
+                        //}
 					}
                     node["aid"] = nil
 

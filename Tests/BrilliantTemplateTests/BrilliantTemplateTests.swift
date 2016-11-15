@@ -108,9 +108,9 @@ class BrilliantTemplateTests: XCTestCase {
     }
     
     func test_attribute_plus() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"previouClass newClass otherClass\"></div>\n    </body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"otherClass\"></div>\n        <div class=\"previousClass otherClass\"></div>\n    </body>\n</html>\n"
 
-        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["extra":"newClass otherClass"], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["extra":"otherClass"], path: getPathTemplates())
         
         print(template.getHTML())
         XCTAssertEqual(template.getHTML(), HTML_RESULT)

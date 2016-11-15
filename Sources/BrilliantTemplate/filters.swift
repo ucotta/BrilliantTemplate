@@ -16,7 +16,7 @@ private let COMPARABLE = "<>=!".characters
 public var TEMPLATE_DEFAULT_LOCALE = Locale.current
 
 enum FilterAction {
-    case ok, removeNode, returnNone, remainNodes
+    case ok, removeNode, returnNone, remainNodes, plus
 }
 
 
@@ -210,6 +210,8 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
         }
 
         switch filter {
+        case "+":
+            result = .plus
         case "raw":
             escapeMethod = "raw"
         case "urlencode":
