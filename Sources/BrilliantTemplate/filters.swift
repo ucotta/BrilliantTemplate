@@ -274,7 +274,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 
 
 func filterNumber(value: NSNumber, filters: [String]) -> (value: String, result: FilterAction) {
-    let result: FilterAction = .ok
+    let result: FilterAction = filters.contains("+") ? .plus : .ok
 
     if filters.count > 1 {
         var filter = filters[1], option1 = "", option2 = ""

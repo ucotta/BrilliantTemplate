@@ -305,6 +305,8 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             attributeValue = r.value
+                        case .plus:
+                            attributeValue = (node[attribute] ?? "") + r.value
                         default:
                             node.removeNodes()
                             node.parentNode = nil
@@ -315,6 +317,8 @@ public class BrilliantTemplate {
                         switch r.result {
                         case .ok:
                             attributeValue = r.value
+                        case .plus:
+                            attributeValue = (node[attribute] ?? "") + r.value
                         default:
                             node.removeNodes()
                             node.parentNode = nil
