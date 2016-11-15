@@ -211,8 +211,21 @@ public class BrilliantTemplate {
 
 					case let v as [[String: Any?]]:
 						// Array of dictionaries
-						node["tid"] = nil
-						processArray(node: node, values: v)
+                        // Bool dont populate arrays, just show or remove a tag.
+                        if parts.contains("empty") {
+                            if v.count > 0 {
+                                node.removeNodes()
+                                node.parentNode = nil
+                            }
+                        } else if parts.contains("noempty") {
+                            if v.count == 0 {
+                                node.removeNodes()
+                                node.parentNode = nil
+                            }
+                        } else {
+                            processArray(node: node, values: v)
+                        }
+                        node["tid"] = nil
 
 					case let v as [HTMLNode]:
 						node.removeNodes()

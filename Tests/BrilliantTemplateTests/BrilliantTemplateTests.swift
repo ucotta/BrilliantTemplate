@@ -112,7 +112,7 @@ class BrilliantTemplateTests: XCTestCase {
 
         let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["extra":"otherClass", "id": UInt32(2)], path: getPathTemplates())
         
-        print(template.getHTML())
+        //print(template.getHTML())
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
         
     }
@@ -146,7 +146,7 @@ class BrilliantTemplateTests: XCTestCase {
 
 	func test_filters_date() {
 		func isEqual(_ comp: (value: String, result: FilterAction), _ value:String, _ action:FilterAction) -> Bool {
-			print("\t\t####### [\(comp.value)] == [\(value)]")
+			//print("\t\t####### [\(comp.value)] == [\(value)]")
 			return value == comp.value && comp.result == action
 		}
 
@@ -206,12 +206,13 @@ class BrilliantTemplateTests: XCTestCase {
     }
     
     func test_conditional() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>bool is not true</h1>\n        <h1>name is not empty</h1>\n        <h1>surname is empty</h1>\n    </body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>bool is not true</h1>\n        <h1>name is not empty</h1>\n        <h1>surname is empty</h1>\n        \n        <h4>There is not activities</h4>\n\n\n    </body>\n</html>\n"
         
         let data: [String: Any?] = [
             "bool": false,
             "name": "something",
-            "surname": ""
+            "surname": "",
+            "activities": []
         ]
         
         let template = BrilliantTemplate(file: "test_conditional.html", data: data, path: getPathTemplates())
