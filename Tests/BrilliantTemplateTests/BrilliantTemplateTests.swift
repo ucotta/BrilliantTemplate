@@ -218,6 +218,16 @@ class BrilliantTemplateTests: XCTestCase {
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
     }
     
+    func test_support_uint32() {
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div data-id=\"4294967295\" class=\"previouClass\"></div>\n        <div>4294967295</div>\n    </body>\n</html>\n"
+        
+        let data: [String: Any?] = [
+            "UInt32": UINT32_MAX
+        ]
+        
+        let template = BrilliantTemplate(file: "test_support_uint32.html", data: data, path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+    }
     
     
 }

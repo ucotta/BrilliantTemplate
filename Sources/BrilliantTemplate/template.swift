@@ -195,6 +195,19 @@ public class BrilliantTemplate {
                             node.parentNode = nil
                         default: break
                         }
+                    case let v as UInt32:
+                        let v2 = NSNumber(value: v)
+                        node.removeNodes()
+                        let r = filterNumber(value: v2, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            node.addNode(node: TextHTML(text: r.value))
+                        case .removeNode:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        default: break
+                        }
+                        
 
 					case let v as [[String: Any?]]:
 						// Array of dictionaries
@@ -296,7 +309,16 @@ public class BrilliantTemplate {
                             node.removeNodes()
                             node.parentNode = nil
                         }
-
+                    case let v as UInt32:
+                        let v2 = NSNumber(value: v)
+                        let r = filterNumber(value: v2, filters: parts)
+                        switch r.result {
+                        case .ok:
+                            attributeValue = r.value
+                        default:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
 					default:
 						node["aid"] = "\(variable) not supported"
 						print("\(parts[0]) not supported")
