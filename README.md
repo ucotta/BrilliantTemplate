@@ -80,8 +80,8 @@ This is the call to library:
 ``` swift
 import BrilliantTemplate
 
-var tc = BrilliantTemplate("example.html", data: data, path: "/var/www/templates")
-print(tc.getHTML())
+var tc = BrilliantTemplate("example.html", path: "/var/www/templates")
+print(tc.getHTML(data: data, ))
 
 ```
 
