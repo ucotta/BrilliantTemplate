@@ -60,19 +60,17 @@ import BrilliantHTML5Parser
 public class BrilliantTemplate {
 	var html: String?
 	let file: String?
-	let data: [String:Any?]
+	var data: [String:Any?] = [:]
 	let path: String
 
-	public init(file: String, data:[String:Any?]? = nil, path: String = ".") {
+	public init(file: String, path: String = ".") {
 		self.file = file
-		self.data = data ?? [:]
 		self.path = path
         html = loadfile(file: file, in: path)
 	}
 
-	public init(html: String, data:[String:Any?]? = nil, path: String = ".") {
+	public init(html: String, path: String = ".") {
 		self.html = html
-		self.data = data ?? [:]
 		self.path = path
 		self.file = nil
 	}
@@ -325,6 +323,8 @@ public class BrilliantTemplate {
                             attributeValue = r.value
                         case .plus:
                             attributeValue = (node[attribute] ?? "") + r.value
+						case .remainNodes:
+							break
                         default:
                             node.removeNodes()
                             node.parentNode = nil
@@ -373,12 +373,17 @@ public class BrilliantTemplate {
 	}
 
 	public func getHTML() -> String {
+		return getHTML(data: nil)
+	}
+	public func getHTML(data:[String:Any?]?) -> String {
+		self.data = data ?? [:]
+
 		let doc = ParserHTML5(html: html!);
 
         loadIncludes(doc: doc)
-		processTids(doc: doc, data:data)
-		processAids(doc: doc, data:data)
-		processJSids(doc: doc, data:data)
+		processTids(doc: doc, data: self.data)
+		processAids(doc: doc, data: self.data)
+		processJSids(doc: doc, data: self.data)
         cleanBrilliantTag(doc: doc)
 
 		return doc.toHTML

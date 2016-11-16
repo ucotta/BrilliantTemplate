@@ -37,9 +37,9 @@ class BrilliantTemplateTests: XCTestCase {
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"></html>"
 
 		let data: [String:Any?]? = ["lang": "en"]
-		let template = BrilliantTemplate(html: HTML, data: data)
+		let template = BrilliantTemplate(html: HTML)
 
-		XCTAssertEqual(template.getHTML(), HTML_RESULT)
+		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
 	}
 
 	func test_tid_basic() {
@@ -47,9 +47,9 @@ class BrilliantTemplateTests: XCTestCase {
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"><head><title>this is the title</title></head></html>"
 
 		let data: [String:Any?]? = ["title": "this is the title"]
-		let template = BrilliantTemplate(html: HTML, data: data)
+		let template = BrilliantTemplate(html: HTML)
 
-		XCTAssertEqual(template.getHTML(), HTML_RESULT)
+		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
 	}
 
 	func test_tid_repeater() {
@@ -63,16 +63,16 @@ class BrilliantTemplateTests: XCTestCase {
 				["link": "http://www.example.com/test2.html", "title": "Example test 2"]
 			]
 		]
-		let template = BrilliantTemplate(html: HTML, data: data)
-		XCTAssertEqual(template.getHTML(), HTML_RESULT)
+		let template = BrilliantTemplate(html: HTML)
+		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
 	}
     
     func test_include() {
         let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n<body>\n<div class=\"menu\"><span>the file was included</span>\n\n</div>\n</body>\n</html>\n"
 
-        let template = BrilliantTemplate(file: "test_include.html", data: [:], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_include.html", path: getPathTemplates())
         
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+		XCTAssertEqual(template.getHTML(), HTML_RESULT)
 
     }
 
@@ -80,7 +80,7 @@ class BrilliantTemplateTests: XCTestCase {
         let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">cannot open file this_file_doesnt_exist.html\n        </div>\n    </body>\n</html>\n"
 
         
-        let template = BrilliantTemplate(file: "test_include_error.html", data: [:], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_include_error.html", path: getPathTemplates())
         
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
         
@@ -90,7 +90,7 @@ class BrilliantTemplateTests: XCTestCase {
     
     func test_include_travesal_attack() {
         let HTML_RESULT =  "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"menu\">cannot open file ../BrilliantTemplateTests.swift\n        </div>\n    </body>\n</html>\n"
-        let template = BrilliantTemplate(file: "test_include_travesal_attack.html", data: [:], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_include_travesal_attack.html", path: getPathTemplates())
         
         
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
@@ -100,9 +100,9 @@ class BrilliantTemplateTests: XCTestCase {
     func test_brilliant_tag() {
         let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        \n            Single tag to be replaced\n        \n        Hello!\n    </body>\n</html>\n"
         
-        let template = BrilliantTemplate(file: "test_brilliant_tag.html", data: ["sayHello":"Hello!"], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_brilliant_tag.html", path: getPathTemplates())
         
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        XCTAssertEqual(template.getHTML(data: ["sayHello":"Hello!"]), HTML_RESULT)
         
         
     }
@@ -111,18 +111,17 @@ class BrilliantTemplateTests: XCTestCase {
 		let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"otherClass\"></div>\n        <div class=\"previousClass otherClass\"></div>\n        <a href=\"activity.html?id=2\"></a>\n\t\t<h1 class=\"prev customClass\">prev plus customClass</h1>\n\t\t<h1 class=\"prev \">prev only</h1>\n    </body>\n</html>\n"
 
 
-        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["active": true, "extra":"otherClass", "id": UInt32(2)], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_attribute_plus.html", path: getPathTemplates())
         
-        //print(template.getHTML())
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        XCTAssertEqual(template.getHTML(data: ["active": true, "extra":"otherClass", "id": UInt32(2)]), HTML_RESULT)
         
     }
     
     func test_attribute_comparable() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n<!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n\n\t\t<h1 class=\"customClass\">attribute class has customClass</a></h1>\n\t\t<h1>there is not class attribute</a></h1>\n<!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n    \n    \n</html><//html><//body><//h1><//a></h1><//h1><//a></h1></body></html>"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n<!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n\n\t\t<h1 class=\"customClass\">attribute class has customClass</h1>\n\t\t<h1>there is not class attribute</h1>\n<!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n    \n    \n</html>\n"
 
-        let template = BrilliantTemplate(file: "test_attribute_comparable.html", data: ["active": true, "value":"10", "color": "#ff0000"], path: getPathTemplates())
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        let template = BrilliantTemplate(file: "test_attribute_comparable.html", path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(data: ["active": true, "value": "10", "color": "#ff0000"]), HTML_RESULT)
     }
     
 
@@ -202,8 +201,8 @@ class BrilliantTemplateTests: XCTestCase {
             "color": "#ff0000"
         ]
         
-        let template = BrilliantTemplate(file: "test_dictionary.html", data: data, path: getPathTemplates())
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        let template = BrilliantTemplate(file: "test_dictionary.html", path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
     }
     
     func test_conditional() {
@@ -216,8 +215,8 @@ class BrilliantTemplateTests: XCTestCase {
             "activities": []
         ]
         
-        let template = BrilliantTemplate(file: "test_conditional.html", data: data, path: getPathTemplates())
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        let template = BrilliantTemplate(file: "test_conditional.html", path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
     }
     
     func test_support_uint32() {
@@ -227,9 +226,21 @@ class BrilliantTemplateTests: XCTestCase {
             "UInt32": UINT32_MAX
         ]
         
-        let template = BrilliantTemplate(file: "test_support_uint32.html", data: data, path: getPathTemplates())
-        XCTAssertEqual(template.getHTML(), HTML_RESULT)
+        let template = BrilliantTemplate(file: "test_support_uint32.html", path: getPathTemplates())
+        XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
     }
-    
-    
+
+
+	func test_filter_number() {
+		let HTML_RESULT10 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>= 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>&gt; 09</h1>\n\t\t<h1>not empty</h1>\n\t</body>\n</html>\n"
+		let HTML_RESULT0 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>! 10</h1>\n\t\t<h1>&lt; 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>empty</h1>\n\t</body>\n</html>\n"
+
+		let template = BrilliantTemplate(file: "test_filter_number.html", path: getPathTemplates())
+		XCTAssertEqual(template.getHTML(data: ["value": 10]), HTML_RESULT10)
+		XCTAssertEqual(template.getHTML(data: ["value": 0]), HTML_RESULT0)
+
+	}
+
+
+
 }

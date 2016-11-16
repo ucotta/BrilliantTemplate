@@ -280,36 +280,96 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 }
 
 
-func filterNumber(value: NSNumber, filters: [String]) -> (value: String, result: FilterAction) {
-    let result: FilterAction = filters.contains("+") ? .plus : .ok
 
-    if filters.count > 1 {
-        var filter = filters[1], option1 = "", option2 = ""
-        if filter.contains("/") {
-            var tmp = filters[1].components(separatedBy: "/")
-            filter = tmp[0]
-            option1 = tmp[1]
-            option2 = tmp.count > 2 ? tmp[2] : ""
-        }
+func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String, result: FilterAction) {
+	var filters = _filters
+	var result: FilterAction = .ok
+	var stringResult = "\(value)"
 
-        if filter.contains("currency") {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .currency
-            formatter.locale = option1 == "" ? Locale.current : Locale(identifier: option1)
-            return (value: formatter.string(from: value) ?? "currency error in \(value)", result: .ok)
+	filters.remove(at: 0)
+	while filters.count > 0 {
+		let filterRaw = filters.remove(at: 0)
+		var filterSep: [String] = filterRaw.components(separatedBy: "/")
+		var filter = filterSep.remove(at: 0)
 
-        } else if filter == "decimal" {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.locale = option1 == "" ? Locale.current : Locale(identifier: option1)
-            if !option2.isEmpty {
-                formatter.minimumFractionDigits = Int(option2) ?? 2
-                formatter.maximumFractionDigits = Int(option2) ?? 2
-            }
-            return (value: formatter.string(from: value) ?? "decimal error in \(value)", result: .ok)
+		if filter.isEmpty {
+			continue
+		}
 
-        }
-    }
-    return (value: "\(value)", result: result)
+		switch filter {
+		case "currency":
+			let formatter = NumberFormatter()
+			formatter.numberStyle = .currency
+			while filterSep.count > 0 {
+				let option: String = filterSep.remove(at: 0)
+				if option.isEmpty {
+					continue
+				}
+				if option.contains("_") {
+					formatter.locale = Locale(identifier: option)
+				} else {
+					print("filterNumber: unknown option [\(option)] in \(filterRaw)")
+				}
+			}
+			stringResult = formatter.string(from: value) ?? "currency error in \(value)"
+
+		case "decimal":
+			let formatter = NumberFormatter()
+			formatter.numberStyle = .decimal
+			while filterSep.count > 0 {
+				let option: String = filterSep.remove(at: 0)
+				if option.isEmpty {
+					continue
+				}
+				if option.contains("_") {
+					formatter.locale = Locale(identifier: option)
+				} else if Int(option) != nil {
+					formatter.minimumFractionDigits = Int(option)!
+					formatter.maximumFractionDigits = Int(option)!
+				} else {
+					print("filterNumber: unknown option [\(option)] in \(filterRaw)")
+				}
+			}
+			stringResult = formatter.string(from: value) ?? "decimal error in \(value)"
+		case "empty", "false":
+			result = value.isEqual(to: 0) ? .remainNodes : .removeNode
+		case "notempty", "true":
+			result = value.isNotEqual(to: 0) ? .remainNodes : .removeNode
+
+
+		case "+":
+			if result == .ok {
+				result = .plus
+			}
+
+		default:
+			let c: Character = filter.characters.popFirst()!
+			let comp = NSNumber(value: Double(filter) ?? 0.0)
+
+			switch c {
+			case "=":
+				result = value.isEqual(to: comp) ? .remainNodes : .removeNode
+
+			case "<":
+				result = value.isLessThan(comp) ? .remainNodes : .removeNode
+
+			case ">":
+				result = value.isGreaterThan(comp) ? .remainNodes : .removeNode
+
+			case "!":
+				result = value.isNotEqual(to: comp) ? .remainNodes : .removeNode
+
+			case "?" where !filter.isEmpty:
+				stringResult = filter
+
+			case "?":
+				continue
+
+			default:
+				return (value: "filter: \(c)\(filter) not supported", result: .ok)
+			}
+		}
+	}
+
+	return (value: stringResult, result: result)
 }
-
