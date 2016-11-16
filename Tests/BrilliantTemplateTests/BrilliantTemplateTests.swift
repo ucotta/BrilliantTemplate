@@ -108,9 +108,10 @@ class BrilliantTemplateTests: XCTestCase {
     }
     
     func test_attribute_plus() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"otherClass\"></div>\n        <div class=\"previousClass otherClass\"></div>\n        <a href=\"activity.html?id=2\"></a>\n    </body>\n</html>\n"
+		let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <div class=\"otherClass\"></div>\n        <div class=\"previousClass otherClass\"></div>\n        <a href=\"activity.html?id=2\"></a>\n\t\t<h1 class=\"prev customClass\">prev plus customClass</h1>\n\t\t<h1 class=\"prev \">prev only</h1>\n    </body>\n</html>\n"
 
-        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["extra":"otherClass", "id": UInt32(2)], path: getPathTemplates())
+
+        let template = BrilliantTemplate(file: "test_attribute_plus.html", data: ["active": true, "extra":"otherClass", "id": UInt32(2)], path: getPathTemplates())
         
         //print(template.getHTML())
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
@@ -118,9 +119,9 @@ class BrilliantTemplateTests: XCTestCase {
     }
     
     func test_attribute_comparable() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n        <!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n        <!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n    \n    \n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n<!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n\n\t\t<h1 class=\"customClass\">attribute class has customClass</a></h1>\n\t\t<h1>there is not class attribute</a></h1>\n<!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n    \n    \n</html><//html><//body><//h1><//a></h1><//h1><//a></h1></body></html>"
 
-        let template = BrilliantTemplate(file: "test_attribute_comparable.html", data: ["value":"10", "color": "#ff0000"], path: getPathTemplates())
+        let template = BrilliantTemplate(file: "test_attribute_comparable.html", data: ["active": true, "value":"10", "color": "#ff0000"], path: getPathTemplates())
         XCTAssertEqual(template.getHTML(), HTML_RESULT)
     }
     

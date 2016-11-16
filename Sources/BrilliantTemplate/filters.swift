@@ -79,6 +79,11 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
 		}
 
         switch filter.lowercased() {
+		case "+":
+			if result == .ok {
+				result = .plus
+			}
+
         case "true":
             result = value ? .ok : .returnNone
 
@@ -99,7 +104,7 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
         return (value: "", result: .ok)
     }
 
-    return (value: stringResult, result: .ok)
+    return (value: stringResult, result: result)
 }
 
 func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction) {
@@ -211,7 +216,9 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 
         switch filter {
         case "+":
-            result = .plus
+			if result == .ok {
+				result = .plus
+			}
         case "raw":
             escapeMethod = "raw"
         case "urlencode":

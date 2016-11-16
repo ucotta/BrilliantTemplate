@@ -307,10 +307,16 @@ public class BrilliantTemplate {
                         }
 
                     case let v as Bool:
-                        if filterBoolAID(value: v, filters: parts).result == .removeNode {
-                            node.removeNodes()
-                            node.parentNode = nil
-                        }
+						let r = filterBoolAID(value: v, filters: parts)
+						switch r.result {
+						case .ok:
+							attributeValue = r.value
+						case .plus:
+							attributeValue = (node[attribute] ?? "") + r.value
+						default:
+							node.removeNodes()
+							node.parentNode = nil
+						}
 
 					case let v as NSNumber:
 						let r = filterNumber(value: v, filters: parts)
