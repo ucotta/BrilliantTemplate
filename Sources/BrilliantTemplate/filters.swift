@@ -344,20 +344,20 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 
 		default:
 			let c: Character = filter.characters.popFirst()!
-			let comp = NSNumber(value: Double(filter) ?? 0.0)
+			let dblValue:Double = value.doubleValue, dblComp:Double = Double(filter) ?? 0.0
 
 			switch c {
 			case "=":
-				result = value.isEqual(to: comp) ? .remainNodes : .removeNode
+				result = dblValue.isEqual(to: dblComp) ? .remainNodes : .removeNode
 
 			case "<":
-				result = value.isLessThan(comp) ? .remainNodes : .removeNode
+				result = dblValue.isLess(than: dblComp) ? .remainNodes : .removeNode
 
 			case ">":
-				result = value.isGreaterThan(comp) ? .remainNodes : .removeNode
+				result = dblComp.isLess(than: dblValue) ? .remainNodes : .removeNode
 
 			case "!":
-				result = value.isNotEqual(to: comp) ? .remainNodes : .removeNode
+				result = !dblValue.isEqual(to: dblComp) ? .remainNodes : .removeNode
 
 			case "?" where !filter.isEmpty:
 				stringResult = filter
