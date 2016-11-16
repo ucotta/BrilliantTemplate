@@ -332,9 +332,9 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 			}
 			stringResult = formatter.string(from: value) ?? "decimal error in \(value)"
 		case "empty", "false":
-			result = value.isEqual(to: 0) ? .remainNodes : .removeNode
+			result = value.isEqual(to: NSNumber(value: 0)) ? .remainNodes : .removeNode
 		case "notempty", "true":
-			result = value.isNotEqual(to: 0) ? .remainNodes : .removeNode
+			result = !value.isEqual(to: NSNumber(value: 0)) ? .remainNodes : .removeNode
 
 
 		case "+":
