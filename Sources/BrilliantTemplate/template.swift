@@ -181,7 +181,7 @@ public class BrilliantTemplate {
 						}
 
 					case let v as NSNumber:
-                        node.removeNodes()
+                        //node.removeNodes()
                         let r = filterNumber(value: v, filters: parts)
                         switch r.result {
                         case .ok:

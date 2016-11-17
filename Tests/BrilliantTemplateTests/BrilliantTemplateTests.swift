@@ -232,8 +232,8 @@ class BrilliantTemplateTests: XCTestCase {
 
 
 	func test_filter_number() {
-		let HTML_RESULT10 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>= 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>&gt; 09</h1>\n\t\t<h1>not empty</h1>\n\t</body>\n</html>\n"
-		let HTML_RESULT0 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>! 10</h1>\n\t\t<h1>&lt; 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>empty</h1>\n\t</body>\n</html>\n"
+		let HTML_RESULT10 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>= 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>&gt; 09</h1>\n\t\t<h1>not empty</h1>\n\t\t<h1>tid = 10</h1>\n\t</body>\n</html>\n"
+		let HTML_RESULT0 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>! 10</h1>\n\t\t<h1>&lt; 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>empty</h1>\n\t\t<h1>tid != 10</h1>\n\t</body>\n</html>\n"
 
 		let template = BrilliantTemplate(file: "test_filter_number.html", path: getPathTemplates())
 		XCTAssertEqual(template.getHTML(data: ["value": 10]), HTML_RESULT10)
