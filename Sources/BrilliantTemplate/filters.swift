@@ -199,6 +199,21 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 }
 
 
+func getDate(from string:String) -> Date {
+	// formats: yyyy-MM-dd hh:mm:ss, yyyy-MM-dd or hh:mm:ss
+	let hasDate = string.contains(string: "-")
+	let hasTime = string.contains(string: ":")
+	var formatter = DateFormatter()
+	formatter.dateFormat = "hh:mm:ss"
+	if hasDate && hasTime {
+		formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+	} else if hasDate {
+		formatter.dateFormat = "yyyy-MM-dd"
+	}
+	
+	return formatter.date(from: string) ?? Date()
+}
+
 func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction) {
     var filters = _filters
     var value: String = _val
@@ -215,6 +230,10 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
         }
 
         switch filter {
+        case "date":
+	        // reset and send it to filterDate
+	        filters.insert("date", at: 0)
+            return filterDate(value: getDate(from: value),  filters: filters)
         case "+":
 			if result == .ok {
 				result = .plus
