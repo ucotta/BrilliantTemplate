@@ -295,7 +295,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
         //value = value.stringByEncodingURL
     }
 
-    return (value: value.htmlEscape(), result: result)
+    return (value: value, result: result)
 }
 
 
