@@ -289,6 +289,12 @@ public class BrilliantTemplate {
                             attributeValue = r.value
                         case .plus:
                             attributeValue = (node[attribute] ?? "") + r.value
+                        case .replace:
+                            if let data: String = node[attribute], let sequence = r.extra {
+                                attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                            } else {
+                                attributeValue = ""
+                            }
                         default:
                             node.removeNodes()
                             node.parentNode = nil
@@ -311,6 +317,13 @@ public class BrilliantTemplate {
 							attributeValue = r.value
 						case .plus:
 							attributeValue = (node[attribute] ?? "") + r.value
+                        //case .replace:
+                        //    if let data: String = node[attribute], let sequence = r.extra {
+                        //        attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                        //    } else {
+                        //        attributeValue = ""
+                        //    }
+
 						default:
 							node.removeNodes()
 							node.parentNode = nil
@@ -323,6 +336,13 @@ public class BrilliantTemplate {
                             attributeValue = r.value
                         case .plus:
                             attributeValue = (node[attribute] ?? "") + r.value
+                        case .replace:
+                            if let data: String = node[attribute], let sequence = r.extra {
+                                attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                            } else {
+                                attributeValue = ""
+                            }
+
 						case .remainNodes:
 							break
                         default:
@@ -337,6 +357,13 @@ public class BrilliantTemplate {
                             attributeValue = r.value
                         case .plus:
                             attributeValue = (node[attribute] ?? "") + r.value
+                        case .replace:
+                            if let data: String = node[attribute], let sequence = r.extra {
+                                attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                            } else {
+                                attributeValue = ""
+                            }
+
                         default:
                             node.removeNodes()
                             node.parentNode = nil

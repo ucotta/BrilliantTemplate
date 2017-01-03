@@ -16,7 +16,7 @@ private let COMPARABLE = "<>=!".characters
 public var TEMPLATE_DEFAULT_LOCALE = Locale.current
 
 enum FilterAction {
-    case ok, removeNode, returnNone, remainNodes, plus
+    case ok, removeNode, returnNone, remainNodes, plus, replace
 }
 
 
@@ -107,12 +107,13 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
     return (value: stringResult, result: result)
 }
 
-func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction) {
+func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
     let value: Date = _val
     let result: FilterAction = .ok
     var stringResult: String = ""
     var escapeMethod = "htmlencode"
+    var extra: String? = nil
 
     let formatter = DateFormatter()
 	formatter.locale = TEMPLATE_DEFAULT_LOCALE
@@ -180,7 +181,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
             } else if filter.hasPrefix("format/") {
                 formatter.dateFormat = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
             } else {
-                return (value: "filter: \(filter) not supported", result: .ok)
+                return (value: "filter: \(filter) not supported", result: .ok, extra: extra)
             }
         }
 
@@ -195,7 +196,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 		// import a library.
         //stringResult = stringResult.stringByEncodingURL
     }
-    return (value: stringResult, result: result)
+    return (value: stringResult, result: result, extra: extra)
 }
 
 
@@ -203,7 +204,7 @@ func getDate(from string:String) -> Date {
 	// formats: yyyy-MM-dd hh:mm:ss, yyyy-MM-dd or hh:mm:ss
 	let hasDate = string.contains(string: "-")
 	let hasTime = string.contains(string: ":")
-	var formatter = DateFormatter()
+	let formatter = DateFormatter()
 	formatter.dateFormat = "hh:mm:ss"
 	if hasDate && hasTime {
 		formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
@@ -214,10 +215,11 @@ func getDate(from string:String) -> Date {
 	return formatter.date(from: string) ?? Date()
 }
 
-func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction) {
+func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
     var value: String = _val
     var result: FilterAction = .ok
+    var extra: String? = nil
 
     var escapeMethod = "htmlencode"
 
@@ -277,6 +279,10 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             case "!":
                 value = value < filter ? value : ""
 
+            case "~":
+                extra = filter
+                result = .replace
+
             case "?" where !value.isEmpty:
                 value = filter
 
@@ -284,7 +290,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
                 continue
 
             default:
-                return (value: "filter: \(c)\(filter) not supported", result: .ok)
+                return (value: "filter: \(c)\(filter) not supported", result: .ok, extra: extra)
             }
         }
     }
@@ -295,15 +301,16 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
         //value = value.stringByEncodingURL
     }
 
-    return (value: value, result: result)
+    return (value: value, result: result, extra: extra)
 }
 
 
 
-func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String, result: FilterAction) {
+func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
 	var filters = _filters
 	var result: FilterAction = .ok
 	var stringResult = "\(value)"
+    var extra: String? = nil
 
 	filters.remove(at: 0)
 	while filters.count > 0 {
@@ -378,6 +385,10 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 			case "!":
 				result = !dblValue.isEqual(to: dblComp) ? .remainNodes : .removeNode
 
+            case "~":
+                extra = filter
+                result = .replace
+
 			case "?" where !filter.isEmpty:
 				stringResult = filter
 
@@ -385,10 +396,10 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 				continue
 
 			default:
-				return (value: "filter: \(c)\(filter) not supported", result: .ok)
+				return (value: "filter: \(c)\(filter) not supported", result: .ok, extra: extra)
 			}
 		}
 	}
 
-	return (value: stringResult, result: result)
+	return (value: stringResult, result: result, extra: extra)
 }
