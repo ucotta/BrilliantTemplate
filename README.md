@@ -33,11 +33,11 @@ let data: [String: Any?] = [
 The template for example.html
 ``` html
 <!DOCTYPE HTML>
-<html aid="lang:lang">
+<html bid-lang="lang">
 <head>
 	<title tid="title:upper:cap"></title>
-	<meta name="keywords" aid="content:keywords:lower">
-	<meta name="description" aid="content:description">
+	<meta name="keywords" bid-content="keywords:lower">
+	<meta name="description" bid-content="description">
 
 	<script jsid="javascriptVars">
 		// this javascript will be replaced by the javascriptVars data
@@ -48,7 +48,7 @@ The template for example.html
 <body>
 	<include file="menu.html"></include>
 
-	<h1 tid="title:cap" aid="data-val:importe:currency/en_US">Title example</h1>
+	<h1 tid="title:cap" bid-data-val="importe:currency/en_US">Title example</h1>
 
 	<article>
 		<div tid="amount:currency/en_US">show currency in US</div>
@@ -58,7 +58,7 @@ The template for example.html
 	</article>
 
 	<div tid="links">
-		<p><a aid="href:link" tid="title">some document...</a></p>
+		<p><a bid-href="link" bid-title="title" tid="title">some document...</a></p>
 	</div>
 </body>
 </html>
@@ -116,10 +116,10 @@ And this will be the result for this code:
 		<div>20</div>
 	</article>
 	<div>
-		<p><a href="https://github.com/ucotta">ucotta&apos;s repositories</a></p>
+		<p><a href="https://github.com/ucotta" title="ucotta&apos;s repositories">ucotta&apos;s repositories</a></p>
 	</div>
 	<div>
-		<p><a href="https://github.com/ucotta/BrilliantTemplate">this repository</a></p>
+		<p><a href="https://github.com/ucotta/BrilliantTemplate" title="this repository">this repository</a></p>
 	</div>
 </body>
 </html>
@@ -190,4 +190,4 @@ Now select the correct scheme and run!.
 # More information in the Wiki of this project
 https://github.com/ucotta/BrilliantTemplate/wiki
 
-```
+
