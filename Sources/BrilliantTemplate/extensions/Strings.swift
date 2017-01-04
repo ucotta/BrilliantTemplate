@@ -1,9 +1,8 @@
 //
-// Created by Ubaldo Cotta on 12/11/16.
+// Created by Ubaldo Cotta on 4/1/17.
 //
 
 import Foundation
-
 
 
 // Extracted from
@@ -92,3 +91,4 @@ extension String {
         return nil
     }
 }
+
