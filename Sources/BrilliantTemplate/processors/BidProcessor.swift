@@ -7,13 +7,14 @@ import BrilliantHTML5Parser
 
 extension BrilliantTemplate {
     func processAid(node: HTMLNode, data: [String: Any?]) {
-        if let aid = node["aid"] {
+        let attPrefix = node.prefixClass ?? "aid"
+        if let aid = node[attPrefix] {
             var parts: [String] = aid.components(separatedBy: ":")
 
-            if (parts.count < 2) {
-                node["aid"] = "incorrect syntax, aid needs 2 or more parameters"
+            if (parts.count < 1) {
+                node[attPrefix] = "incorrect syntax, bid needs 2 or more parameters"
             } else {
-                let attribute = parts.remove(at: 0)
+                let attribute = node.prefixAttribute // parts.remove(at: 0)
 
                 if let variable = untieVar(name: parts[0], data: data) {
                     //if let variable = data[parts[0]] {
@@ -107,7 +108,7 @@ extension BrilliantTemplate {
                             node.parentNode = nil
                         }
                     default:
-                        node["aid"] = "\(variable) not supported"
+                        node[attPrefix] = "\(variable) not supported"
                         print("\(parts[0]) not supported")
                     }
 
@@ -118,10 +119,10 @@ extension BrilliantTemplate {
                         //    node[attribute] = node[attribute]! + " " + attributeValue!
                         //}
                     }
-                    node["aid"] = nil
+                    node[attPrefix] = nil
 
                 } else {
-                    node["aid"] = nil
+                    node[attPrefix] = nil
                     if node[attribute] == nil {
                         node[attribute] = ""
                     }
