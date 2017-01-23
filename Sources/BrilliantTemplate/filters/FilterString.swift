@@ -51,6 +51,10 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 
         case "lower":
             value = value.lowercased()
+        
+        case "size":
+            // Return the strings's size
+            value = String(value.characters.count)
 
         default:
             // Comparable filter has two parts, first character is operator, the rest are value to by compared.
