@@ -81,7 +81,10 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
 
         case "false":
             result = !value ? .ok : .returnNone
-
+        
+        case "checkbox":
+	        result = value ? result : .removeAttribute
+        
         default:
             if filter.hasPrefix("?") {
                 stringResult = removePrefix(string: filter, prefix: "?")

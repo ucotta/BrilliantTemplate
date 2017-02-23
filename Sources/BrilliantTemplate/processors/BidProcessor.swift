@@ -62,7 +62,9 @@ extension BrilliantTemplate {
                                 //    } else {
                                 //        attributeValue = ""
                                 //    }
-
+                        case .removeAttribute:
+                            attributeValue = nil
+                        
                         default:
                             node.removeNodes()
                             node.parentNode = nil
@@ -84,6 +86,9 @@ extension BrilliantTemplate {
 
                         case .remainNodes:
                             break
+
+                        case .removeAttribute:
+                            attributeValue = nil
                         default:
                             node.removeNodes()
                             node.parentNode = nil

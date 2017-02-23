@@ -61,6 +61,8 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
         case "notempty", "true":
             result = !value.isEqual(NSNumber(value: 0)) ? .remainNodes : .removeNode
 
+        case "checkbox":
+            result = !value.isEqual(NSNumber(value: 0)) ? result : .removeAttribute
 
         case "+":
             if result == .ok {
