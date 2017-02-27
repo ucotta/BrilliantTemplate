@@ -83,7 +83,6 @@ extension BrilliantTemplate {
                             } else {
                                 attributeValue = ""
                             }
-
                         case .remainNodes:
                             break
 
@@ -94,8 +93,7 @@ extension BrilliantTemplate {
                             node.parentNode = nil
                         }
                     case let v as UInt32:
-                        let v2 = NSNumber(value: v)
-                        let r = filterNumber(value: v2, filters: parts)
+                        let r = filterNumber(value: NSNumber(value: v), filters: parts)
                         switch r.result {
                         case .ok:
                             attributeValue = r.value
@@ -107,14 +105,40 @@ extension BrilliantTemplate {
                             } else {
                                 attributeValue = ""
                             }
-
+                        case .remainNodes:
+                            break
+    
+                        case .removeAttribute:
+                            attributeValue = nil
+                        default:
+                            node.removeNodes()
+                            node.parentNode = nil
+                        }
+                    case let v as Int32:
+                        let r = filterNumber(value: NSNumber(value: v), filters: parts)
+                        switch r.result {
+                        case .ok:
+                            attributeValue = r.value
+                        case .plus:
+                            attributeValue = (node[attribute] ?? "") + r.value
+                        case .replace:
+                            if let data: String = node[attribute], let sequence = r.extra {
+                                attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                            } else {
+                                attributeValue = ""
+                            }
+                        case .remainNodes:
+                            break
+    
+                        case .removeAttribute:
+                            attributeValue = nil
                         default:
                             node.removeNodes()
                             node.parentNode = nil
                         }
                     default:
                         node[attPrefix] = "\(variable) not supported"
-                        print("\(parts[0]) not supported")
+                        print("bidprocessor: \(parts[0]) not supported")
                     }
 
                     if attributeValue != nil && !attributeValue!.isEmpty {
