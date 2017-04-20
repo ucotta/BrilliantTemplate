@@ -8,7 +8,7 @@ import Foundation
 func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
     let value: Date = _val
-    let result: FilterAction = .replace
+    var result: FilterAction = .replace
     var stringResult: String = ""
     var escapeMethod = "htmlencode"
     var extra: String? = nil
@@ -73,6 +73,14 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
         case "full":
             formatter.dateStyle = formatter.dateStyle != .none ? .full : .none
             formatter.timeStyle = formatter.timeStyle != .none ? .full : .none
+
+        case "isnil":
+            result = .removeNode
+
+        case "notnil":
+            result = .remainNodes
+        
+        
         default:
             if filter.contains(string: "_") {
                 formatter.locale = Locale(identifier: filter)

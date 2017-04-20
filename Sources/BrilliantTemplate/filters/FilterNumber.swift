@@ -63,6 +63,11 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 
         case "checkbox":
             result = !value.isEqual(NSNumber(value: 0)) ? result : .removeAttribute
+        case "isnil":
+            result = .removeNode
+
+        case "notnil":
+            result = .remainNodes
 
         case "+":
             if result == .replace {

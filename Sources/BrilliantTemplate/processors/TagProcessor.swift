@@ -40,10 +40,10 @@ extension BrilliantTemplate {
                         }
 
                     case let v as Date:
-                        node.removeNodes()
                         let r = filterDate(value: v, filters: parts)
                         switch r.result {
                         case .replace:
+							node.removeNodes()
                             node.addNode(node: TextHTML(text: r.value))
                         case .removeNode:
                             node.removeNodes()

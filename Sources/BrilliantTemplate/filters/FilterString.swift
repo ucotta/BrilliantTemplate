@@ -42,6 +42,12 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             result = value.isEmpty ? .removeNode : .remainNodes
         case "empty", "false":
             result = value.isEmpty ? .remainNodes : .removeNode
+        
+        case "isnil":
+            result = .removeNode
+        
+        case "notnil":
+            result = .remainNodes
 
         case "cap":
             value = value.capitalized

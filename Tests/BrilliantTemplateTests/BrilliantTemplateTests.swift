@@ -32,27 +32,7 @@ class BrilliantTemplateTests: XCTestCase {
         return _pathTemplates ?? ""
     }
 	
-	func test_stringNil() {
-		let HTML = "<!DOCTYPE html><html><body><div tid='saludo:notnil'>notnil</div><div tid='saludo:nil'>nil</div></body></html>"
-		let HTML_RESULT = "<!DOCTYPE html><html><body><div>nil</div></body></html>"
-		
-		let data: [String:Any?]? = ["saludo": nil]
-		let template = BrilliantTemplate(html: HTML)
-		
-		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
-		
-	}
 	
-	func test_htmlAttributeLang() {
-		let HTML = "<!DOCTYPE html><html bid-lang=\"lang\"></html>"
-		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"></html>"
-
-		let data: [String:Any?]? = ["lang": "en"]
-		let template = BrilliantTemplate(html: HTML)
-
-		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
-	}
-
 	func test_tid_basic() {
 		let HTML = "<!DOCTYPE html><html lang=\"en\"><head><title tid=\"title\"></title></head></html>"
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"><head><title>this is the title</title></head></html>"
@@ -245,17 +225,16 @@ class BrilliantTemplateTests: XCTestCase {
 
 
 	func test_filter_number() {
-		let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body>\n\t\t<h1>initial value <span>10</span></h1>\n\t\t\n\t\t<b>bid section</b>\n\t\t<h1 data-id=\"10\">a = 10</h1>\n\t\t<h1>b ! 10</h1>\n\t\t<h1>c &lt; 10</h1>\n\t\t<h1>d &gt; 10</h1>\n\t\t<h1 data-id=\"10\">e &lt; 11</h1>\n\t\t<h1 data-id=\"10\">f &gt; 09</h1>\n\t\t<h1 data-id=\"10\">g not empty</h1>\n\t\t<h1>h empty</h1>\n\t\t\n\t\t<b>tid section</b>\n\t\t<h1>tid = 10</h1>\n\t</body>\n</html>\n"
-
 		let template = BrilliantTemplate(file: "test_filter_number.html", path: getPathTemplates())
-		XCTAssertEqual(template.getHTML(data: ["value": "10"]), HTML_RESULT)
-		XCTAssertEqual(template.getHTML(data: ["value": 10]), HTML_RESULT)
-
-		//print(template.getHTML(data: ["value": "10"]))
-		//print(template.getHTML(data: ["value": 10]))
-
+		XCTAssertEqual(template.getHTML(data: ["value": "10"]), loadfile(file: "test_filter_number-result.html", in: getPathTemplates()))
+		XCTAssertEqual(template.getHTML(data: ["value": 10]), loadfile(file: "test_filter_number-result.html", in: getPathTemplates()))
 	}
 
+	func test_stringNil() {
+		let data: [String:Any?]? = ["test1": nil, "test2": "notnil", "test3": 100, "test4": Date()]
+		let template = BrilliantTemplate(file: "test_isnil_notnil.html", path: getPathTemplates())
+		XCTAssertEqual(template.getHTML(data: data), loadfile(file: "test_isnil_notnil-result.html", in: getPathTemplates()))
+	}
 
 
 }
