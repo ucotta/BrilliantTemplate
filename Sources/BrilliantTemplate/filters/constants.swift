@@ -8,5 +8,7 @@ private let COMPARABLE = "<>=!".characters
 public var TEMPLATE_DEFAULT_LOCALE = Locale.current
 
 enum FilterAction {
-    case ok, removeNode, returnNone, remainNodes, plus, replace, removeAttribute
+    @available(*, deprecated)
+    case ok
+    case removeNode, returnNone, remainNodes, plus, replace, removeAttribute, replaceVariable
 }

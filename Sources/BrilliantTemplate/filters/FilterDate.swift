@@ -8,7 +8,7 @@ import Foundation
 func filterDate(value _val: Date, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
     let value: Date = _val
-    let result: FilterAction = .ok
+    let result: FilterAction = .replace
     var stringResult: String = ""
     var escapeMethod = "htmlencode"
     var extra: String? = nil
@@ -79,7 +79,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
             } else if filter.hasPrefix("format/") {
                 formatter.dateFormat = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
             } else {
-                return (value: "filter: \(filter) not supported", result: .ok, extra: extra)
+                return (value: "filter: \(filter) not supported", result: .replace, extra: extra)
             }
         }
 

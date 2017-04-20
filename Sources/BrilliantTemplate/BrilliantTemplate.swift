@@ -82,7 +82,7 @@ public class BrilliantTemplate {
                 childNode["tid"] = nil
             }
             while let childNode: HTMLNode = newNode.getNextBid() {
-                processAid(node: childNode, data: mergedData)
+                processBid(node: childNode, data: mergedData)
                 childNode["aid"] = nil
             }
             newNode.setBeforeNode(node: node)
@@ -101,7 +101,7 @@ public class BrilliantTemplate {
 
         loadIncludes(doc: doc)
         processTids(doc: doc, data: self.data)
-        processAids(doc: doc, data: self.data)
+        processBids(doc: doc, data: self.data)
         processJSids(doc: doc, data: self.data)
         cleanBrilliantTag(doc: doc)
 

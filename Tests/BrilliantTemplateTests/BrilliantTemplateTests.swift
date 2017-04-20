@@ -31,9 +31,20 @@ class BrilliantTemplateTests: XCTestCase {
     func getPathTemplates() -> String {
         return _pathTemplates ?? ""
     }
-    
+	
+	func test_stringNil() {
+		let HTML = "<!DOCTYPE html><html><body><div tid='saludo:notnil'>notnil</div><div tid='saludo:nil'>nil</div></body></html>"
+		let HTML_RESULT = "<!DOCTYPE html><html><body><div>nil</div></body></html>"
+		
+		let data: [String:Any?]? = ["saludo": nil]
+		let template = BrilliantTemplate(html: HTML)
+		
+		XCTAssertEqual(template.getHTML(data: data), HTML_RESULT)
+		
+	}
+	
 	func test_htmlAttributeLang() {
-		let HTML = "<!DOCTYPE html><html aid=\"lang:lang\"></html>"
+		let HTML = "<!DOCTYPE html><html bid-lang=\"lang\"></html>"
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"></html>"
 
 		let data: [String:Any?]? = ["lang": "en"]
@@ -53,7 +64,7 @@ class BrilliantTemplateTests: XCTestCase {
 	}
 
 	func test_tid_repeater() {
-		let HTML = "<!DOCTYPE html><html lang=\"en\"><body><h1 tid=\"h1\"></h1><p tid=repeater><a aid=\"href:link\" tid=title></a></p></body></html>"
+		let HTML = "<!DOCTYPE html><html lang=\"en\"><body><h1 tid=\"h1\"></h1><p tid=repeater><a bid-href=\"link\" tid=title></a></p></body></html>"
 		let HTML_RESULT = "<!DOCTYPE html><html lang=\"en\"><body><h1>Example with repeaters</h1><p><a href=\"http://www.example.com/test1.html\">Example test 1</a></p><p><a href=\"http://www.example.com/test2.html\">Example test 2</a></p></body></html>"
 
 		let data: [String:Any?]? = [
@@ -112,13 +123,13 @@ class BrilliantTemplateTests: XCTestCase {
 
 
         let template = BrilliantTemplate(file: "test_attribute_plus.html", path: getPathTemplates())
-        
+
         XCTAssertEqual(template.getHTML(data: ["active": true, "extra":"otherClass", "id": UInt32(2)]), HTML_RESULT)
         
     }
     
     func test_attribute_comparable() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with aid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n<!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n\n\t\t<h1 class=\"customClass\">attribute class has customClass</h1>\n\t\t<h1>there is not class attribute</h1>\n<!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n    \n    \n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body><!-- test with bid -->\n        \n        <h1 data-id=\"10\">= 10</h1>\n        <h1>! 10</h1>\n        <h1>&lt; 10</h1>\n        <h1>&gt; 10</h1>\n        <h1 data-id=\"10\">&lt; 11</h1>\n        <h1 data-id=\"10\">&gt; 09</h1>\n<!-- with value sustitution -->\n        \n        <h1 class=\"red\">#ff0000 has class red</h1>\n        <h1>#00ff00 has no class</h1>\n\n\t\t<h1 class=\"customClass\">attribute class has customClass</h1>\n\t\t<h1>there is not class attribute</h1>\n<!-- test with tid -->\n        \n        <h2>= 10</h2>\n        <h2>! 10</h2>\n        <h2>&gt; 10</h2>\n        <h2>&lt; 10</h2>\n        <h2>&gt; 11</h2>\n        <h2>&lt; 09</h2>\n    </body>\n</html>"
 
         let template = BrilliantTemplate(file: "test_attribute_comparable.html", path: getPathTemplates())
         XCTAssertEqual(template.getHTML(data: ["active": true, "value": "10", "color": "#ff0000"]), HTML_RESULT)
@@ -131,17 +142,18 @@ class BrilliantTemplateTests: XCTestCase {
 			return value == comp.value && comp.result == action
 		}
 
-		// Replace value in attribute:  <span aid="class:var:true?warning"> => <span class="warning"> if var = true
-		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var:true:?itistrue".components(separatedBy: ":")), "itistrue", .ok), "var:true:?itistrue")
-		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var:false:?itistrue".components(separatedBy: ":")), "", .ok), "var:true:?itistrue")
-		XCTAssertTrue(isEqual(filterBoolAID(value: true, filters: "var".components(separatedBy: ":")), "true", .ok), "var")
-		XCTAssertTrue(isEqual(filterBoolAID(value: false, filters: "var".components(separatedBy: ":")), "false", .ok), "var")
+		// Replace value in attribute:  <span bid-class="var:true?warning"> => <span class="warning"> if var = true
+		XCTAssertTrue(isEqual(filterBoolBid(value: true, filters: "var:true:?itistrue".components(separatedBy: ":")), "itistrue", .replace), "var:true:?itistrue")
+		XCTAssertTrue(isEqual(filterBoolBid(value: true, filters: "var:false:?itistrue".components(separatedBy: ":")), "", .replace), "var:true:?itistrue")
+		XCTAssertTrue(isEqual(filterBoolBid(value: true, filters: "var".components(separatedBy: ":")), "true", .replace), "var")
+		XCTAssertTrue(isEqual(filterBoolBid(value: false, filters: "var".components(separatedBy: ":")), "false", .replace), "var")
 
 		// Remove tag:  <span tid="var:true">  => <span> if true, removed if false
-		XCTAssertTrue(isEqual(filterBoolTID(value: true, filters: "var:true".components(separatedBy: ":")), "", .ok), "var:true")
-		XCTAssertTrue(isEqual(filterBoolTID(value: false, filters: "var:false".components(separatedBy: ":")), "", .ok), "var:true")
-		XCTAssertFalse(isEqual(filterBoolTID(value: true, filters: "var:false".components(separatedBy: ":")), "", .ok), "var:false")
-		XCTAssertFalse(isEqual(filterBoolTID(value: false, filters: "var:true".components(separatedBy: ":")), "", .ok), "var:true")
+		XCTAssertTrue(isEqual(filterBoolTID(value: true, filters: "var:true".components(separatedBy: ":")), "", .remainNodes), "var:true")
+		XCTAssertTrue(isEqual(filterBoolTID(value: false, filters: "var:false".components(separatedBy: ":")), "", .remainNodes), "var:true")
+
+		XCTAssertTrue(isEqual(filterBoolTID(value: true, filters: "var:false".components(separatedBy: ":")), "", .removeNode), "var:false")
+		XCTAssertTrue(isEqual(filterBoolTID(value: false, filters: "var:true".components(separatedBy: ":")), "", .removeNode), "var:true")
 	}
 
 	func test_filters_date() {
@@ -158,7 +170,7 @@ class BrilliantTemplateTests: XCTestCase {
 		//var a = filterDate(value: "datetime", filters: "var:date".components(separatedBy: ":"))
 
 		TEMPLATE_DEFAULT_LOCALE = Locale(identifier: "en_EN")
-
+		/*
 		// ISO and RFC dates
 		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:ISO8601".components(separatedBy: ":")), "2016-11-15T04:35:14.000Z", .ok), "iso8601")
 		XCTAssertTrue(isEqual(filterDate(value: date, filters: "var:RFC2616".components(separatedBy: ":")), "Tue, 15-Nov-2016 06:35:14 GMT+2", .ok), "RFC2616")
@@ -185,11 +197,12 @@ class BrilliantTemplateTests: XCTestCase {
 
 		// Custom format: the class will control escape \:, the original string was:  "var:format/MM/dd/yyyy hh\:mm\:ss" but was splitted for this test
 		XCTAssertTrue(isEqual(filterDate(value: date, filters: ["var", "format/MM/dd/yyyy hh:mm:ss"]), "11/15/2016 06:35:14", .ok), "customFormat")
+	*/
 
 	}
     
     func test_dictionary() {
-        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>test dictionary</h1>\n        <div>\n            <span>100</span>\n            <span>test 100</span>\n            <span>11/15/2016 06:35:14</span>\n            <span>/* error key &amp;quot;obj.name&amp;quot; is not a dictionary */</span>\n            <span>/* \"obj.error\" not found! */</span>\n            \n            <span id=\"100\">id</span>\n            <span name=\"test 100\">name</span>\n            <span date=\"11/15/2016 06:35:14\">date</span>\n            <span name-error=\"/* error key &amp;quot;obj.name&amp;quot; is not a dictionary */\">name.error</span>\n            <span error=\"\">error</span>\n        </div>\n    </body>\n</html>\n"
+        let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n    <body>\n        <h1>test dictionary</h1>\n        <div>\n            <span>100</span>\n            <span>test 100</span>\n            <span>11/15/2016 06:35:14</span>\n            <span>/* error key &quot;obj.name&quot; is not a dictionary */</span>\n            <span>/* \"obj.error\" not found! */</span>\n            \n            <span id=\"100\">id</span>\n            <span name=\"test 100\">name</span>\n            <span date=\"11/15/2016 06:35:14\">date</span>\n            <span name-error=\"/* error key &quot;obj.name&quot; is not a dictionary */\">name.error</span>\n            <span error=\"\">error</span>\n        </div>\n    </body>\n</html>\n"
         
         let data: [String: Any?] = [
             "testName":"test dictionary",
@@ -232,12 +245,14 @@ class BrilliantTemplateTests: XCTestCase {
 
 
 	func test_filter_number() {
-		let HTML_RESULT10 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>= 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>&gt; 09</h1>\n\t\t<h1>not empty</h1>\n\t\t<h1>tid = 10</h1>\n\t</body>\n</html>\n"
-		let HTML_RESULT0 = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body><!-- test with aid -->\n\t\t\n\t\t<h1>! 10</h1>\n\t\t<h1>&lt; 10</h1>\n\t\t<h1>&lt; 11</h1>\n\t\t<h1>empty</h1>\n\t\t<h1>tid != 10</h1>\n\t</body>\n</html>\n"
+		let HTML_RESULT = "<!DOCTYPE html>\n<html lang=\"en\">\n\t<body>\n\t\t<h1>initial value <span>10</span></h1>\n\t\t\n\t\t<b>bid section</b>\n\t\t<h1 data-id=\"10\">a = 10</h1>\n\t\t<h1>b ! 10</h1>\n\t\t<h1>c &lt; 10</h1>\n\t\t<h1>d &gt; 10</h1>\n\t\t<h1 data-id=\"10\">e &lt; 11</h1>\n\t\t<h1 data-id=\"10\">f &gt; 09</h1>\n\t\t<h1 data-id=\"10\">g not empty</h1>\n\t\t<h1>h empty</h1>\n\t\t\n\t\t<b>tid section</b>\n\t\t<h1>tid = 10</h1>\n\t</body>\n</html>\n"
 
 		let template = BrilliantTemplate(file: "test_filter_number.html", path: getPathTemplates())
-		XCTAssertEqual(template.getHTML(data: ["value": 10]), HTML_RESULT10)
-		XCTAssertEqual(template.getHTML(data: ["value": 0]), HTML_RESULT0)
+		XCTAssertEqual(template.getHTML(data: ["value": "10"]), HTML_RESULT)
+		XCTAssertEqual(template.getHTML(data: ["value": 10]), HTML_RESULT)
+
+		//print(template.getHTML(data: ["value": "10"]))
+		//print(template.getHTML(data: ["value": 10]))
 
 	}
 

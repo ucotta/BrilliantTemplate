@@ -24,7 +24,7 @@ func removePrefix(string s: String, prefix: String) -> String {
 func filterBoolTID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
     var filters = _filters
     let value: Bool = _val
-    var result: FilterAction = .ok
+    var result: FilterAction = .remainNodes
 
     filters.remove(at: 0)
     while filters.count > 0 {
@@ -36,13 +36,13 @@ func filterBoolTID(value _val: Bool, filters _filters: [String]) -> (value: Stri
 
         switch filter.lowercased() {
         case "true":
-            result = value ? .ok : .removeNode
+            result = value ? .remainNodes : .removeNode
 
         case "false":
-            result = !value ? .ok : .removeNode
+            result = !value ? .remainNodes : .removeNode
 
         default:
-            return (value: "filter: \(filter) not supported", result: .ok)
+            return (value: "filter: \(filter) not supported", result: .remainNodes)
         }
 
     }
@@ -50,10 +50,10 @@ func filterBoolTID(value _val: Bool, filters _filters: [String]) -> (value: Stri
     return (value: "", result: result)
 }
 
-func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
+func filterBoolBid(value _val: Bool, filters _filters: [String]) -> (value: String, result: FilterAction) {
 	var filters = _filters
 	let value:Bool = _val
-	var result: FilterAction = .ok
+	var result: FilterAction = .replace
     var stringResult = ""
 
     if value {
@@ -72,15 +72,15 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
 
         switch filter.lowercased() {
 		case "+":
-			if result == .ok {
+			if result == .replace {
 				result = .plus
 			}
 
         case "true":
-            result = value ? .ok : .returnNone
+            result = value ? .replace : .returnNone
 
         case "false":
-            result = !value ? .ok : .returnNone
+            result = !value ? .replace : .returnNone
         
         case "checkbox":
 	        result = value ? result : .removeAttribute
@@ -89,14 +89,14 @@ func filterBoolAID(value _val: Bool, filters _filters: [String]) -> (value: Stri
             if filter.hasPrefix("?") {
                 stringResult = removePrefix(string: filter, prefix: "?")
             } else {
-                return (value: "filter: \(filter) not supported", result: .ok)
+                return (value: "filter: \(filter) not supported", result: .replace)
             }
         }
 
 	}
 
     if result == .returnNone {
-        return (value: "", result: .ok)
+        return (value: "", result: .replace)
     }
 
     return (value: stringResult, result: result)

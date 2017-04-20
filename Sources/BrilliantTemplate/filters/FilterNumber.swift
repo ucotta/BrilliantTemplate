@@ -7,7 +7,7 @@ import Foundation
 
 func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
-    var result: FilterAction = .ok
+    var result: FilterAction = .replace
     var stringResult = "\(value)"
     var extra: String? = nil
 
@@ -65,7 +65,7 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
             result = !value.isEqual(NSNumber(value: 0)) ? result : .removeAttribute
 
         case "+":
-            if result == .ok {
+            if result == .replace {
                 result = .plus
             }
 
@@ -88,7 +88,7 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
 
             case "~":
                 extra = filter
-                result = .replace
+                result = .replaceVariable
 
             case "?" where !filter.isEmpty:
                 stringResult = filter
@@ -97,7 +97,7 @@ func filterNumber(value: NSNumber, filters _filters: [String]) -> (value: String
                 continue
 
             default:
-                return (value: "filter: \(c)\(filter) not supported", result: .ok, extra: extra)
+                return (value: "filter: \(c)\(filter) not supported", result: .replace, extra: extra)
             }
         }
     }

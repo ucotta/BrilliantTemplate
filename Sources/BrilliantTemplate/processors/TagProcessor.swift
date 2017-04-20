@@ -23,13 +23,14 @@ extension BrilliantTemplate {
                 let escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
                 var parts = escaped.components(separatedBy: ":")
 
-                if let variable = untieVar(name: parts[0], data: data) {
+                if var variable = untieVar(name: parts[0], data: data) {
+                    variable = toInteger(value: variable)
 
                     switch variable {
                     case let v as String:
                         let r = filterString(value: v, filters: parts)
                         switch r.result {
-                        case .ok:
+                        case .replace:
                             node.removeNodes()
                             node.addNode(node: TextHTML(text: r.value))
                         case .removeNode:
@@ -42,7 +43,7 @@ extension BrilliantTemplate {
                         node.removeNodes()
                         let r = filterDate(value: v, filters: parts)
                         switch r.result {
-                        case .ok:
+                        case .replace:
                             node.addNode(node: TextHTML(text: r.value))
                         case .removeNode:
                             node.removeNodes()
@@ -54,30 +55,6 @@ extension BrilliantTemplate {
                         if filterBoolTID(value: v, filters: parts).result == .removeNode {
                             node.removeNodes()
                             node.parentNode = nil
-                        }
-
-                    case let v as NSNumber:
-                        node.removeNodes()
-                        let r = filterNumber(value: v, filters: parts)
-                        switch r.result {
-                        case .ok:
-                            node.addNode(node: TextHTML(text: r.value))
-                        case .removeNode:
-                            //node.removeNodes()
-                            node.parentNode = nil
-                        default: break
-                        }
-                    case let v as UInt32:
-                        let v2 = NSNumber(value: v)
-                        node.removeNodes()
-                        let r = filterNumber(value: v2, filters: parts)
-                        switch r.result {
-                        case .ok:
-                            node.addNode(node: TextHTML(text: r.value))
-                        case .removeNode:
-                            node.removeNodes()
-                            node.parentNode = nil
-                        default: break
                         }
 
 
@@ -105,8 +82,32 @@ extension BrilliantTemplate {
 
 
                     default:
-                        print("\(parts[0]) not supported")
-                            //rint(variable)
+                        if variable is UInt {
+                            variable = NSNumber(value: variable as! UInt)
+                        } else if variable is Int {
+                            variable = NSNumber(value: variable as! Int)
+                        }
+    
+                        if let v = variable as? NSNumber {
+                            let r = filterNumber(value: v, filters: parts)
+                            switch r.result {
+                            case .replace:
+                                node.removeNodes()
+                                node.addNode(node: TextHTML(text: r.value))
+                            case .removeNode:
+                                node.removeNodes()
+                                node.parentNode = nil
+                            default: break
+                            }
+						} else if String(describing: variable) == "nil" {
+							// Strings with "nil" text value was procesed in case let v as String. This is a real nil value...
+							if parts.contains("notnil") {
+								node.removeNodes()
+								node.parentNode = nil
+							}
+                        } else {
+                            print("\(parts[0]) not supported")
+                        }
                     }
 
                 } else {

@@ -8,8 +8,8 @@ import Foundation
 func filterString(value _val: String, filters _filters: [String]) -> (value: String, result: FilterAction, extra: String?) {
     var filters = _filters
     var value: String = _val
-    var result: FilterAction = .ok
-    var extra: String? = nil
+    var result: FilterAction = .replace
+    var variable: String? = nil
 
     var escapeMethod = "htmlencode"
 
@@ -27,7 +27,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
             filters.insert("date", at: 0)
             return filterDate(value: getDate(from: value),  filters: filters)
         case "+":
-            if result == .ok {
+            if result == .replace {
                 result = .plus
             }
         case "raw":
@@ -62,20 +62,20 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
 
             switch c {
             case "=":
-                value = value == filter ? value : ""
+                result = value == filter ? .remainNodes : .removeNode
 
             case "<":
-                value = value < filter ? value : ""
+                result = value < filter ? .remainNodes : .removeNode
 
             case ">":
-                value = value > filter ? value : ""
+                result = value > filter ? .remainNodes : .removeNode
 
             case "!":
-                value = value < filter ? value : ""
-
+                result = value < filter ? .remainNodes : .removeNode
+				
             case "~":
-                extra = filter
-                result = .replace
+                variable = filter
+                result = .replaceVariable
 
             case "?" where !value.isEmpty:
                 value = filter
@@ -84,7 +84,7 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
                 continue
 
             default:
-                return (value: "filter: \(c)\(filter) not supported", result: .ok, extra: extra)
+                return (value: "filter: \(c)\(filter) not supported", result: .replace, extra: variable)
             }
         }
     }
@@ -95,6 +95,6 @@ func filterString(value _val: String, filters _filters: [String]) -> (value: Str
         //value = value.stringByEncodingURL
     }
 
-    return (value: value, result: result, extra: extra)
+    return (value: value, result: result, extra: variable)
 }
 
