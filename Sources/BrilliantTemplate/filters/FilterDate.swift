@@ -111,9 +111,9 @@ func getDate(from string:String) -> Date {
     let hasDate = string.contains(string: "-")
     let hasTime = string.contains(string: ":")
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mm:ss"
+    formatter.dateFormat = "HH:mm:ss"
     if hasDate && hasTime {
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
     } else if hasDate {
         formatter.dateFormat = "yyyy-MM-dd"
     }
