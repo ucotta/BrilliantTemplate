@@ -1,8 +1,8 @@
 # BrilliantTemplate
 
-BrilliantTemplate is template processor for Swift to process HTML5.
+BrilliantTemplate is a template processor for Swift to process HTML5.
 
-Was created with designers in mid, BrilliantTemplate avoid dirty code by using tags and attibutes for variables and control structures.
+It was created with designers in mind. BrilliantTemplate avoid dirty code by using tags and attibutes for variables and control structures.
 
 Merge the data with the template is easy, just prepare a dictionary with all values and then, use BrilliantTemplate with your html5 template.
 
