@@ -20,7 +20,7 @@ extension BrilliantTemplate {
             if (tid.isEmpty) {
                 node.addNode(node: TextHTML(text: "/* Empty tid cannot be used */"))
             } else {
-                let escaped = tid.stringByReplacing(string: "\\:", withString: "$DDOTESC$")
+                let escaped = tid.replacingOccurrences(of: "\\:", with: "$DDOTESC$")
                 var parts = escaped.components(separatedBy: ":")
 
                 if var variable = untieVar(name: parts[0], data: data) {

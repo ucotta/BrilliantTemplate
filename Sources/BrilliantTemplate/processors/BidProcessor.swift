@@ -44,7 +44,7 @@ extension BrilliantTemplate {
                             attributeValue = (node[attribute] ?? "") + r.value
                         case .replaceVariable:
                             if let data: String = node[attribute], let sequence = r.extra {
-                                attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+                                attributeValue = data.replacingOccurrences(of: sequence, with: r.value)
                             } else {
                                 attributeValue = ""
                             }
@@ -98,7 +98,7 @@ extension BrilliantTemplate {
 								attributeValue = (node[attribute] ?? "") + r.value
 							case .replaceVariable:
 								if let data: String = node[attribute], let sequence = r.extra {
-									attributeValue = data.stringByReplacing(string: sequence, withString: r.value)
+									attributeValue = data.replacingOccurrences(of: sequence, with: r.value)
 								} else {
 									attributeValue = ""
 								}

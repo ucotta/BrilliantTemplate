@@ -11,7 +11,7 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
     var result: FilterAction = .replace
     var stringResult: String = ""
     var escapeMethod = "htmlencode"
-    var extra: String? = nil
+    let extra: String? = nil
 
     let formatter = DateFormatter()
     formatter.locale = TEMPLATE_DEFAULT_LOCALE
@@ -82,10 +82,10 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
         
         
         default:
-            if filter.contains(string: "_") {
+            if filter.contains("_") {
                 formatter.locale = Locale(identifier: filter)
             } else if filter.hasPrefix("format/") {
-                formatter.dateFormat = removePrefix(string: filter, prefix: "format/").stringByReplacing(string: "$DDOTESC$", withString: ":")
+                formatter.dateFormat = removePrefix(string: filter, prefix: "format/").replacingOccurrences(of: "$DDOTESC$", with: ":")
             } else {
                 return (value: "filter: \(filter) not supported", result: .replace, extra: extra)
             }
@@ -108,8 +108,8 @@ func filterDate(value _val: Date, filters _filters: [String]) -> (value: String,
 
 func getDate(from string:String) -> Date {
     // formats: yyyy-MM-dd hh:mm:ss, yyyy-MM-dd or hh:mm:ss
-    let hasDate = string.contains(string: "-")
-    let hasTime = string.contains(string: ":")
+    let hasDate = string.contains("-")
+    let hasTime = string.contains(":")
     let formatter = DateFormatter()
     formatter.dateFormat = "HH:mm:ss"
     if hasDate && hasTime {

@@ -146,7 +146,7 @@ class BrilliantTemplateTests: XCTestCase {
 		// Basic dates
 		// 15/nov/2016 6:35am
 
-		let date = Date(timeIntervalSince1970: 1479184514)
+		//let date = Date(timeIntervalSince1970: 1479184514)
 		//var a = filterDate(value: "datetime", filters: "var:date".components(separatedBy: ":"))
 
 		TEMPLATE_DEFAULT_LOCALE = Locale(identifier: "en_EN")

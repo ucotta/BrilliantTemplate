@@ -13,7 +13,7 @@ extension BrilliantTemplate {
                 node.removeNodes()
                 if (jsid.isEmpty) {
                     node.addNode(node: TextHTML(text: "/* Empty jsid cannot be used */"))
-                } else if let script = data[jsid] {
+                } else if let script = data[jsid] as? String {
                     node.addNode(node: TextHTML(text: "\n\(script)\n"))
                 } else {
                     node.addNode(node: TextHTML(text: "/* \"\(jsid)\" not found! */"))
